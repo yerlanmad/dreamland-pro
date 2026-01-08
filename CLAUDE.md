@@ -130,7 +130,22 @@ end
 ```bash
 bundle install
 rails db:create db:migrate
+rails db:seed
+
+# Option 1: Start with Tailwind CSS watcher (recommended)
+bin/dev
+
+# Option 2: Start without Tailwind watcher
 rails server
+```
+
+### Tailwind CSS
+```bash
+# Build Tailwind CSS manually
+rails tailwindcss:build
+
+# Watch for changes (automatically done with bin/dev)
+rails tailwindcss:watch
 ```
 
 ### Testing
@@ -238,10 +253,22 @@ export default class extends Controller {
 
 ### Tailwind CSS
 
-Utility-first styling. Common patterns for this app:
+**Status:** ✅ Installed and configured (v3.3.2)
+
+The project uses `tailwindcss-rails` gem with the following setup:
+- **Config:** `config/tailwind.config.js`
+- **Styles:** `app/assets/stylesheets/application.tailwind.css`
+- **Output:** `app/assets/builds/tailwind.css`
+- **Process:** Foreman manages Rails server + Tailwind watcher via `bin/dev`
+
+**Common patterns for this app:**
 - Cards: `bg-white rounded-lg shadow-sm p-6`
-- Buttons: `bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded`
-- Forms: Use form helpers with Tailwind classes
+- Buttons: `bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg`
+- Forms: `border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500`
+- Status badges: `px-3 py-1 rounded-full text-sm font-medium`
+- Icons: Use Heroicons or similar, sized with `w-5 h-5` or `w-6 h-6`
+
+**Important:** Always use Tailwind utility classes instead of custom CSS where possible. The design system is now fully styled with Tailwind.
 
 ## Authentication
 

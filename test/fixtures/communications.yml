@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  communicable: one
+  communicable_type: Communicable
+  communication_type: MyString
+  subject: MyString
+  body: MyText
+  direction: MyString
+  whatsapp_message_id: MyString
+  whatsapp_status: MyString
+  media_url: MyString
+  media_type: MyString
+
+two:
+  communicable: two
+  communicable_type: Communicable
+  communication_type: MyString
+  subject: MyString
+  body: MyText
+  direction: MyString
+  whatsapp_message_id: MyString
+  whatsapp_status: MyString
+  media_url: MyString
+  media_type: MyString

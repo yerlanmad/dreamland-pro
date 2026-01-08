@@ -10,13 +10,14 @@ A specialized CRM built for tour operators and travel agencies with native Whats
 
 ## Tech Stack
 
-- **Framework:** Ruby on Rails 8.0+
+- **Framework:** Ruby on Rails 8.1.1
 - **Database:** SQLite3 (Phase 1) → PostgreSQL (Phase 2)
-- **Frontend:** Hotwire (Turbo + Stimulus), Tailwind CSS
+- **Frontend:** Hotwire (Turbo + Stimulus), Tailwind CSS 3.3.2
 - **Background Jobs:** SolidQueue (database-backed)
 - **Caching:** SolidCache (database-backed)
 - **WebSockets:** SolidCable (database-backed)
-- **Authentication:** Rails 8 built-in authentication
+- **Authentication:** Rails 8 built-in authentication (implemented)
+- **Testing:** RSpec + FactoryBot + Faker
 - **Deployment:** Kamal 2
 
 ## Key Features
@@ -47,12 +48,22 @@ cd dreamland-pro
 # Install dependencies
 bundle install
 
-# Setup database
-rails db:create db:migrate
+# Setup database and seed demo data
+rails db:create db:migrate db:seed
 
-# Start the server
+# Start the development server with Tailwind CSS watcher (recommended)
+bin/dev
+
+# Or start without Tailwind watcher
 rails server
 ```
+
+The application will be available at `http://localhost:3000`
+
+**Demo Credentials:**
+- Admin: `admin@dreamland.pro` / `password123`
+- Manager: `manager@dreamland.pro` / `password123`
+- Agent: `agent@dreamland.pro` / `password123`
 
 ### Configuration
 
@@ -62,15 +73,51 @@ rails server
 
 ## Development
 
-```bash
-# Run tests
-rails test
+### Running the Application
 
+```bash
+# Start with Tailwind CSS watcher (recommended)
+bin/dev
+
+# Or start Rails server only
+rails server
+```
+
+### Tailwind CSS
+
+```bash
+# Build Tailwind CSS
+rails tailwindcss:build
+
+# Watch for changes
+rails tailwindcss:watch
+```
+
+### Testing
+
+```bash
+# Run all tests
+bundle exec rspec
+
+# Run specific test file
+bundle exec rspec spec/models/user_spec.rb
+
+# Run with coverage
+COVERAGE=true bundle exec rspec
+```
+
+### Code Quality
+
+```bash
 # Run linter
 rubocop
 
-# Start development server
-rails server
+# Auto-fix issues
+rubocop -a
+
+# Security audit
+bundle exec bundler-audit check
+bundle exec brakeman
 ```
 
 ## Deployment
