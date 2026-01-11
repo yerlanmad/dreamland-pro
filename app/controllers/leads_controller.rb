@@ -1,8 +1,8 @@
 class LeadsController < ApplicationController
-  before_action :set_lead, only: [:show, :edit, :update, :destroy, :assign, :mark_contacted]
+  before_action :set_lead, only: [:show, :edit, :update, :destroy, :assign, :mark_contacted, :convert_to_booking]
 
   def index
-    @leads = Lead.includes(:assigned_agent, :tour_interest)
+    @leads = Lead.includes(:client, :assigned_agent, :tour_interest)
 
     # Filter by status
     @leads = @leads.by_status(params[:status]) if params[:status].present?
@@ -19,10 +19,16 @@ class LeadsController < ApplicationController
     # Filter unread messages
     @leads = @leads.with_unread_messages if params[:unread] == 'true'
 
-    # Search by name, email, or phone
+    # Filter active leads (not won or lost)
+    @leads = @leads.active if params[:active] == 'true'
+
+    # Search by client name, email, or phone
     if params[:search].present?
       search_term = "%#{params[:search]}%"
-      @leads = @leads.where("name LIKE ? OR email LIKE ? OR phone LIKE ?", search_term, search_term, search_term)
+      @leads = @leads.joins(:client).where(
+        "clients.name LIKE ? OR clients.email LIKE ? OR clients.phone LIKE ?",
+        search_term, search_term, search_term
+      )
     end
 
     # Order and paginate
@@ -33,18 +39,42 @@ class LeadsController < ApplicationController
   end
 
   def show
-    @communications = @lead.communications.recent.limit(50)
+    @communications = @lead.client.communications
+                           .where(lead_id: @lead.id)
+                           .or(@lead.client.communications.where(lead_id: nil, booking_id: nil))
+                           .recent
+                           .limit(50)
     @available_tours = Tour.active.order(:name)
+    @available_departures = TourDeparture.upcoming.includes(:tour).order(:departure_date)
   end
 
   def new
-    @lead = Lead.new
+    # Check if client_id is provided (creating lead for existing client)
+    if params[:client_id].present?
+      @client = Client.find(params[:client_id])
+      @lead = @client.leads.new
+    else
+      # Creating new lead with new client
+      @lead = Lead.new
+      @lead.build_client
+    end
+
     @tours = Tour.active.order(:name)
   end
 
   def create
-    @lead = Lead.new(lead_params)
-    @lead.source = :manual # Manual entry from CRM
+    # Check if we're creating a lead for an existing client or a new one
+    if params[:lead][:client_id].present?
+      # Existing client
+      @client = Client.find(params[:lead][:client_id])
+      @lead = @client.leads.new(lead_params_without_client)
+    else
+      # New client - build both together
+      @lead = Lead.new(lead_params_without_client)
+      @lead.build_client(client_params) if params[:lead][:client_attributes].present?
+    end
+
+    @lead.source ||= :manual # Default to manual entry from CRM
 
     if @lead.save
       redirect_to @lead, notice: "Lead was successfully created."
@@ -60,7 +90,12 @@ class LeadsController < ApplicationController
   end
 
   def update
-    if @lead.update(lead_params)
+    if @lead.update(lead_params_without_client)
+      # Also update client info if provided
+      if params[:lead][:client_attributes].present?
+        @lead.client.update(client_params)
+      end
+
       redirect_to @lead, notice: "Lead was successfully updated."
     else
       @tours = Tour.active.order(:name)
@@ -91,21 +126,41 @@ class LeadsController < ApplicationController
     redirect_to @lead, notice: "Lead marked as contacted."
   end
 
+  # Custom action: Convert lead to booking
+  def convert_to_booking
+    tour_departure = TourDeparture.find(params[:tour_departure_id])
+    num_participants = params[:num_participants].to_i
+
+    begin
+      booking = @lead.convert_to_booking!(tour_departure, num_participants)
+      redirect_to booking, notice: "Lead successfully converted to booking!"
+    rescue StandardError => e
+      redirect_to @lead, alert: "Failed to convert lead: #{e.message}"
+    end
+  end
+
   private
 
   def set_lead
-    @lead = Lead.find(params[:id])
+    @lead = Lead.includes(:client).find(params[:id])
   end
 
-  def lead_params
+  def lead_params_without_client
     params.require(:lead).permit(
-      :name,
-      :email,
-      :phone,
       :status,
       :source,
       :assigned_agent_id,
       :tour_interest_id
+    )
+  end
+
+  def client_params
+    params.require(:lead).fetch(:client_attributes, {}).permit(
+      :name,
+      :phone,
+      :email,
+      :preferred_language,
+      :notes
     )
   end
 end

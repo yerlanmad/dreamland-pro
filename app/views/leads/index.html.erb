@@ -140,7 +140,7 @@
         <thead class="bg-gray-50">
           <tr>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Name
+              Client Name
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Contact
@@ -155,7 +155,10 @@
               Agent
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Messages
+              Tour Interest
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Unread
             </th>
             <th scope="col" class="relative px-6 py-3">
               <span class="sr-only">Actions</span>
@@ -164,13 +167,13 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <% @leads.each do |lead| %>
-            <tr class="hover:bg-gray-50">
+            <tr class="hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.location='<%= lead_path(lead) %>'">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= lead.name %></div>
+                <div class="text-sm font-medium text-gray-900"><%= lead.client.name %></div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900"><%= lead.phone %></div>
-                <div class="text-sm text-gray-500"><%= lead.email %></div>
+                <div class="text-sm text-gray-900"><%= lead.client.phone %></div>
+                <div class="text-sm text-gray-500"><%= lead.client.email %></div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_badge_class(lead.status) %>">
@@ -183,6 +186,9 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <%= lead.assigned_agent&.name || '-' %>
               </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= lead.tour_interest&.name || '-' %>
+              </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <% if lead.unread_messages_count > 0 %>
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -193,7 +199,7 @@
                 <% end %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "View", lead, class: "text-indigo-600 hover:text-indigo-900" %>
+                <%= link_to "View", lead, class: "text-indigo-600 hover:text-indigo-900", onclick: "event.stopPropagation()" %>
               </td>
             </tr>
           <% end %>

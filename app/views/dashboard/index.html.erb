@@ -130,7 +130,7 @@
             </div>
           </div>
           <div class="divide-y divide-gray-200">
-            <% recent_leads = Lead.includes(:assigned_agent).order(created_at: :desc).limit(5) %>
+            <% recent_leads = Lead.includes(:client, :assigned_agent).order(created_at: :desc).limit(5) %>
             <% if recent_leads.any? %>
               <% recent_leads.each do |lead| %>
                 <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
@@ -138,11 +138,11 @@
                     <div class="flex items-center justify-between">
                       <div class="flex items-center min-w-0 flex-1">
                         <div class="h-10 w-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span class="text-indigo-600 font-medium text-sm"><%= lead.name.first.upcase %></span>
+                          <span class="text-indigo-600 font-medium text-sm"><%= lead.client.name.split(' ').map(&:first).join.upcase[0..1] %></span>
                         </div>
                         <div class="ml-4 min-w-0 flex-1">
-                          <p class="text-sm font-medium text-gray-900 truncate"><%= lead.name %></p>
-                          <p class="text-sm text-gray-500 truncate"><%= lead.phone %></p>
+                          <p class="text-sm font-medium text-gray-900 truncate"><%= lead.client.name %></p>
+                          <p class="text-sm text-gray-500 truncate"><%= lead.client.phone %></p>
                         </div>
                       </div>
                       <div class="ml-4 flex items-center space-x-2 flex-shrink-0">

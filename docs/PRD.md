@@ -1,7 +1,7 @@
 # Product Requirements Document: Dreamland PRO CRM
 
-**Version:** 1.3
-**Date:** January 7, 2026
+**Version:** 1.5
+**Date:** January 10, 2026
 **Status:** Draft
 **Product:** Dreamland PRO - Tour Sales CRM System (WhatsApp-First, Russian/English, Multi-Currency)
 
@@ -53,6 +53,82 @@ Dreamland PRO is a specialized CRM system built specifically for tour operators 
 - Month 11-12: Advanced Features & Integrations
 - Month 13-14: Marketing & Beta Program
 - Month 15-16: General Availability Launch
+
+---
+
+## Implementation Status (Phase 1)
+
+**Last Updated:** January 10, 2026
+
+### ✅ Completed Features
+
+#### Core Architecture
+- **Client-Centric Architecture** - Fully implemented with Client → Leads, Bookings, Communications relationships
+- **Database Schema** - All 8 core models with migrations and validations
+- **Authentication** - Rails 8 built-in auth with role-based access (admin/manager/agent)
+- **Multi-Currency** - Full support for USD, KZT, EUR, RUB in tours, bookings, payments
+- **Styling** - Tailwind CSS 3.3.2 with professional SaaS-style design
+
+#### Client Management
+- **Client Views** - Show page with gradient avatar, metrics cards, lifetime history
+- **Client Model** - Find-or-create by phone, duplicate prevention
+- **UI/UX** - Modern design with breadcrumbs, hover effects, responsive layout
+
+#### Lead Management
+- **Lead Index** - Advanced filters (status, source, agent, unassigned, unread)
+- **Lead Show** - Client context, communication history, status management
+- **Lead Forms** - Create/edit with client selection
+- **WhatsApp Integration** - Webhook handler, automatic lead creation from messages
+- **Bug Fixes** - All client attribute access errors resolved
+
+#### Booking Management
+- **Bookings Index** - Filters, search, statistics cards
+- **Bookings Show** - Full context (client, tour, payments, communications)
+- **Bookings Forms** - Auto-calculation (participants × price), tour selection
+- **Status Workflow** - Confirmed → Paid → Completed → Cancelled
+- **Helper Methods** - `booking_status_badge` for UI
+
+#### Payment Tracking
+- **Payments Index** - Filters by status, method, date range
+- **Payments Show** - Booking context, payment progress
+- **Payments Forms** - "Apply full balance" helper, currency support
+- **Outstanding Balance** - Automatic calculation per booking
+- **Helper Methods** - `payment_status_indicator` for bookings
+
+#### Dashboard & Analytics
+- **Statistics Cards** - Total/New/Unassigned leads, Unread messages
+- **Recent Leads** - List with status badges and quick actions
+- **Lead Status Breakdown** - Visual distribution by status
+- **Quick Actions** - New lead, manage tours, view bookings
+
+#### Testing Infrastructure
+- **RSpec + FactoryBot** - Fully configured
+- **Example Specs** - Lead model with comprehensive tests
+- **Factories** - All models (users, leads, tours, bookings, payments)
+
+### 🚧 In Progress
+
+- **Tours Management** - Models complete, controllers/views pending
+- **WhatsApp Templates** - Model complete, UI pending
+- **Test Coverage** - Framework ready, need 80%+ coverage
+- **I18n Translations** - Structure ready, translation files pending
+
+### ⏳ Pending (Phase 1)
+
+- **WhatsApp Outbound** - Send messages from CRM to customers
+- **Real-time Updates** - Turbo Streams for live dashboard/notifications
+- **Email Communication** - Secondary channel with templates
+- **Reporting Enhancement** - Sales pipeline, revenue reports, exports
+- **Multi-Tenancy** - Phase 2 (SaaS platform)
+
+### Estimated Completion Timeline
+
+**Core MVP Remaining:** 5-10 days
+- Tours/Departures UI: 2 days
+- WhatsApp Templates UI: 1 day
+- Outbound messaging: 2 days
+- Real-time features: 2 days
+- Test coverage: 2-3 days
 
 ---
 
@@ -229,41 +305,47 @@ So that I never miss a potential customer and have all conversation context.
 Acceptance Criteria:
 - Given a customer sends a WhatsApp message to our business number via wazzup24
 - When the message is received via webhook
-- Then a new lead is created in the CRM with status "New" (if first-time contact)
-- And the message is logged in the lead's conversation timeline
+- Then a Client record is found or created by phone number
+- And a new Lead is created linked to that Client with status "New"
+- And the message is logged in the Client's communication history
 - And the assigned agent receives a notification (in-app)
 - And the lead source is tracked as "WhatsApp"
-- And customer's name and phone number are captured from WhatsApp
+- And if this is a returning customer, their existing Client info is used
+- And agent can see client's previous leads and bookings in sidebar
 
 Definition of Done:
 - [ ] Webhook endpoint created to receive wazzup24 messages
-- [ ] Lead record created with WhatsApp contact info
-- [ ] Message content stored in Communication model
+- [ ] Client find-or-create logic by phone number
+- [ ] Lead record created with client_id reference
+- [ ] Message content stored in Communication model (linked to Client)
 - [ ] Lead assignment logic implemented (round-robin or manual)
 - [ ] Notification system implemented
-- [ ] Unit tests for lead creation from WhatsApp
+- [ ] Unit tests for client/lead creation from WhatsApp
 - [ ] Integration test for wazzup24 webhook workflow
 - [ ] Error handling for webhook failures
 - [ ] Admin documentation for wazzup24 setup
 ```
 
-#### Story 1.2: View Lead Details and History
+#### Story 1.2: View Lead Details and Client History
 ```
 As a Sales Agent,
-I want to see all information about a lead in one place,
-So that I can provide personalized service without searching multiple systems.
+I want to see all information about a lead and the client's full history in one place,
+So that I can provide personalized service and leverage past interactions.
 
 Acceptance Criteria:
 - Given I am viewing a lead record
 - When the lead detail page loads
-- Then I see contact information, tour interests, communication history, and timeline
-- And all interactions are displayed chronologically
-- And I can see which tours they inquired about
-- And I can see their current stage in the sales pipeline
+- Then I see client contact information, tour interests, and communication history
+- And I see this lead's current stage in the sales pipeline
+- And I see client's previous leads (if returning customer)
+- And I see client's previous bookings (if repeat customer)
+- And all client communications are displayed chronologically
+- And I can quickly identify if this is a repeat customer
 
 Definition of Done:
-- [ ] Lead detail page UI implemented
-- [ ] Data aggregation from all relevant tables
+- [ ] Lead detail page UI implemented with client context
+- [ ] Client sidebar showing previous leads and bookings
+- [ ] Data aggregation from Client, Lead, Booking, Communication tables
 - [ ] Performance optimized (< 1s load time)
 - [ ] Responsive design for mobile/tablet
 - [ ] Unit tests for data aggregation logic
@@ -564,72 +646,85 @@ Definition of Done:
 
 ### Must Have (MVP - Phase 1)
 
-#### 5.1 Lead Management
-- **FR-1.1:** Capture leads automatically from WhatsApp messages via wazzup24 webhook (primary source)
-- **FR-1.2:** Capture customer phone number (WhatsApp), name, and initial message
-- **FR-1.3:** Support manual lead entry and CSV import (secondary sources)
-- **FR-1.4:** Assign leads to sales agents (manual or automatic round-robin)
-- **FR-1.5:** Track lead status through pipeline stages (New → Contacted → Qualified → Quoted → Won/Lost)
-- **FR-1.6:** Search and filter leads by status, source, date, assigned agent, phone number
-- **FR-1.7:** View complete lead timeline with WhatsApp conversation history (all interactions chronologically)
-- **FR-1.8:** Detect and merge duplicate leads by phone number
+#### 5.1 Client Management
+- **FR-1.1:** Create Client record automatically from WhatsApp messages (find-or-create by phone)
+- **FR-1.2:** Store client contact information (phone, name, email, preferred language)
+- **FR-1.3:** View client lifetime history (all leads, bookings, communications)
+- **FR-1.4:** Detect duplicate clients by phone number (unique constraint)
+- **FR-1.5:** Support manual client creation and CSV import
+- **FR-1.6:** Track client notes and internal comments
 
-#### 5.2 Booking Management
-- **FR-2.1:** Convert lead to booking with tour selection
-- **FR-2.2:** Record booking details (tour, dates, number of participants, special requests)
-- **FR-2.3:** Generate booking confirmation with unique reference number
-- **FR-2.4:** Track booking status (Confirmed → Paid → Completed → Cancelled)
-- **FR-2.5:** Support group bookings with multiple participants
+#### 5.2 Lead Management
+- **FR-2.1:** Create Lead linked to Client when customer inquires via WhatsApp webhook (primary source)
+- **FR-2.2:** Create Lead manually for phone/email inquiries (secondary sources)
+- **FR-2.3:** Assign leads to sales agents (manual or automatic round-robin)
+- **FR-2.4:** Track lead status through pipeline stages (New → Contacted → Qualified → Quoted → Won/Lost)
+- **FR-2.5:** Search and filter leads by status, source, date, assigned agent, client info
+- **FR-2.6:** View lead details with client context (past leads, bookings, communications)
+- **FR-2.7:** Support returning customers creating new leads for new inquiries
+- **FR-2.8:** Track which tour the lead is interested in
 
-#### 5.3 Payment Tracking
-- **FR-3.1:** Define payment schedules (deposit %, balance %, due dates)
-- **FR-3.2:** Record payments manually (date, amount, method)
-- **FR-3.3:** Calculate outstanding balances automatically
-- **FR-3.4:** Flag overdue payments for follow-up
-- **FR-3.5:** Generate invoices and receipts (PDF)
+#### 5.3 Booking Management
+- **FR-3.1:** Convert lead to booking linked to Client and Lead
+- **FR-3.2:** Support direct booking creation for repeat customers (optional lead reference)
+- **FR-3.3:** Record booking details (tour, dates, number of participants, special requests)
+- **FR-3.4:** Generate booking confirmation with unique reference number
+- **FR-3.5:** Track booking status (Confirmed → Paid → Completed → Cancelled)
+- **FR-3.6:** Support group bookings with multiple participants
+- **FR-3.7:** View client's booking history (all past and future bookings)
 
-#### 5.4 Customer Communication (WhatsApp-First)
-- **FR-4.1:** Send WhatsApp messages from CRM via wazzup24 API (primary communication)
-- **FR-4.2:** Receive WhatsApp messages via webhook and display in CRM
-- **FR-4.3:** View WhatsApp conversation history in lead/booking timeline
-- **FR-4.4:** Use WhatsApp message templates for common scenarios (greeting, pricing, availability, confirmation)
-- **FR-4.5:** Track WhatsApp message status (sent, delivered, read)
-- **FR-4.6:** Real-time notifications for incoming WhatsApp messages (Turbo Streams)
-- **FR-4.7:** Send emails from CRM for formal communications (secondary channel)
-- **FR-4.8:** Use email templates for confirmations, invoices, itineraries
-- **FR-4.9:** Log phone calls with notes and follow-up tasks
-- **FR-4.10:** View all customer communications (WhatsApp, email, phone) in unified timeline
-- **FR-4.11:** Set reminders for follow-ups
+#### 5.4 Payment Tracking
+- **FR-4.1:** Define payment schedules (deposit %, balance %, due dates)
+- **FR-4.2:** Record payments manually (date, amount, method)
+- **FR-4.3:** Calculate outstanding balances automatically
+- **FR-4.4:** Flag overdue payments for follow-up
+- **FR-4.5:** Generate invoices and receipts (PDF)
 
-#### 5.5 Tour Catalog
-- **FR-5.1:** Create tour listings (name, description, itinerary, inclusions, exclusions)
-- **FR-5.2:** Define pricing (base price, seasonal pricing, group discounts) in multiple currencies (USD, KZT, EUR, RUB)
-- **FR-5.3:** Set departure dates with capacity limits
-- **FR-5.4:** Upload tour images and documents
-- **FR-5.5:** Mark tours as active/inactive
+#### 5.5 Customer Communication (WhatsApp-First)
+- **FR-5.1:** Send WhatsApp messages from CRM via wazzup24 API to Client
+- **FR-5.2:** Receive WhatsApp messages via webhook and link to Client
+- **FR-5.3:** View complete WhatsApp conversation history per Client (across all leads/bookings)
+- **FR-5.4:** Use WhatsApp message templates for common scenarios (greeting, pricing, availability, confirmation)
+- **FR-5.5:** Track WhatsApp message status (sent, delivered, read)
+- **FR-5.6:** Real-time notifications for incoming WhatsApp messages (Turbo Streams)
+- **FR-5.7:** Send emails from CRM for formal communications (secondary channel)
+- **FR-5.8:** Use email templates for confirmations, invoices, itineraries
+- **FR-5.9:** Log phone calls with notes and follow-up tasks
+- **FR-5.10:** View all client communications (WhatsApp, email, phone) in unified timeline
+- **FR-5.11:** Set reminders for follow-ups
+- **FR-5.12:** Link communications to Lead and/or Booking for context
 
-#### 5.6 Reporting
-- **FR-6.1:** Sales pipeline report (leads by stage, conversion rates)
-- **FR-6.2:** Revenue report (by tour, by agent, by date range)
-- **FR-6.3:** Booking report (upcoming departures, capacity utilization)
-- **FR-6.4:** Agent performance report (conversions, revenue, response time)
-- **FR-6.5:** Export reports to CSV/Excel
+#### 5.6 Tour Catalog
+- **FR-6.1:** Create tour listings (name, description, itinerary, inclusions, exclusions)
+- **FR-6.2:** Define pricing (base price, seasonal pricing, group discounts) in multiple currencies (USD, KZT, EUR, RUB)
+- **FR-6.3:** Set departure dates with capacity limits
+- **FR-6.4:** Upload tour images and documents
+- **FR-6.5:** Mark tours as active/inactive
 
-#### 5.7 User Management
-- **FR-7.1:** User authentication (email/password login)
-- **FR-7.2:** Role-based access control (Admin, Manager, Agent)
-- **FR-7.3:** User profiles with contact information
-- **FR-7.4:** Activity logging (who did what, when)
-- **FR-7.5:** User language preference (Russian/English)
-- **FR-7.6:** User currency preference (USD/KZT/EUR/RUB)
+#### 5.7 Reporting
+- **FR-7.1:** Sales pipeline report (leads by stage, conversion rates)
+- **FR-7.2:** Revenue report (by tour, by agent, by date range)
+- **FR-7.3:** Booking report (upcoming departures, capacity utilization)
+- **FR-7.4:** Agent performance report (conversions, revenue, response time)
+- **FR-7.5:** Export reports to CSV/Excel
+- **FR-7.6:** Client lifetime value report (total bookings and revenue per client)
 
-#### 5.8 Localization & Multi-Currency (Phase 1)
-- **FR-8.1:** Full UI in Russian and English (switchable)
-- **FR-8.2:** All user-facing content translated (emails, WhatsApp templates, reports)
-- **FR-8.3:** Multi-currency support for tours and bookings (USD, KZT, EUR, RUB)
-- **FR-8.4:** Currency symbols and formatting ($ USD, ₸ KZT, € EUR, ₽ RUB)
-- **FR-8.5:** Date format localization (DD.MM.YYYY for Russian, MM/DD/YYYY for English)
-- **FR-8.6:** Timezone support with UTC storage
+#### 5.8 User Management
+- **FR-8.1:** User authentication (email/password login)
+- **FR-8.2:** Role-based access control (Admin, Manager, Agent)
+- **FR-8.3:** User profiles with contact information
+- **FR-8.4:** Activity logging (who did what, when)
+- **FR-8.5:** User language preference (Russian/English)
+- **FR-8.6:** User currency preference (USD/KZT/EUR/RUB)
+
+#### 5.9 Localization & Multi-Currency (Phase 1)
+- **FR-9.1:** Full UI in Russian and English (switchable)
+- **FR-9.2:** All user-facing content translated (emails, WhatsApp templates, reports)
+- **FR-9.3:** Multi-currency support for tours and bookings (USD, KZT, EUR, RUB)
+- **FR-9.4:** Currency symbols and formatting ($ USD, ₸ KZT, € EUR, ₽ RUB)
+- **FR-9.5:** Date format localization (DD.MM.YYYY for Russian, MM/DD/YYYY for English)
+- **FR-9.6:** Timezone support with UTC storage
+- **FR-9.7:** Store client's preferred language for personalized communications
 
 ### Should Have (Phase 1 Enhancement)
 
@@ -969,6 +1064,13 @@ This project embraces Rails 8's "no infrastructure" approach, using the Solid ge
 
 ### 7.3 Data Model (Core Entities)
 
+**Client-Centric Architecture:**
+
+This data model separates the lifetime customer relationship (Client) from sales opportunities (Lead):
+- **Client** = The person (permanent, identified by phone)
+- **Lead** = A sales inquiry (temporary, moves through pipeline)
+- **Booking** = A confirmed purchase (linked to Client, optionally to Lead)
+
 **Key Models:**
 ```
 User
@@ -976,17 +1078,28 @@ User
 - created_at, updated_at
 - Note: Language and currency preferences for UI display
 
+Client
+- id, name, phone, email, preferred_language, notes
+- created_at, updated_at
+- Index: phone (unique, for WhatsApp identification and duplicate prevention)
+- Note: Represents the actual customer (lifetime relationship)
+- Business Logic: Find-or-create by phone when WhatsApp message arrives
+
 Lead
-- id, name, email, phone, source, status, assigned_agent_id, tour_interest_id
+- id, client_id, status, source, assigned_agent_id, tour_interest_id
 - last_message_at, unread_messages_count
 - created_at, updated_at
-- Index: phone (unique, for duplicate detection and WhatsApp identification)
-- Note: phone stores WhatsApp number (primary identifier, email optional)
+- Note: Represents a sales opportunity/inquiry
+- Business Logic: Client can have many Leads over time (repeat inquiries)
+- Index: client_id, status, assigned_agent_id
 
 Booking
-- id, lead_id, tour_departure_id, status, num_participants, total_amount, currency (USD/KZT/EUR/RUB)
+- id, client_id, lead_id, tour_departure_id, status, num_participants, total_amount, currency (USD/KZT/EUR/RUB)
 - created_at, updated_at
 - Note: Currency inherited from tour_departure, locked at booking creation
+- Business Logic: Client can have many Bookings (repeat purchases)
+- Business Logic: lead_id is optional (bookings can exist without leads for walk-ins)
+- Index: client_id, lead_id
 
 Payment
 - id, booking_id, amount, currency (USD/KZT/EUR/RUB), payment_date, payment_method, status
@@ -1004,13 +1117,14 @@ TourDeparture
 - Note: Currency can differ from tour's base currency for flexible pricing
 
 Communication
-- id, communicable_type, communicable_id (polymorphic: Lead or Booking)
+- id, client_id, lead_id, booking_id
 - type (whatsapp, email, phone, sms), subject, body, direction (inbound/outbound)
 - whatsapp_message_id, whatsapp_status (sent, delivered, read, failed)
 - media_url, media_type (for WhatsApp images, documents, etc.)
 - created_at, updated_at
-- Index: whatsapp_message_id (for status updates via webhook)
-- Note: type='whatsapp' for wazzup24 messages
+- Index: client_id, whatsapp_message_id
+- Note: All communications belong to Client (lifetime history)
+- Note: lead_id and booking_id are optional context references
 
 WhatsappTemplate
 - id, name, content, variables (JSON array), category, active, created_at, updated_at
@@ -1021,11 +1135,19 @@ Activity
 ```
 
 **Relationships:**
+- Client has_many Leads (repeat inquiries)
+- Client has_many Bookings (repeat purchases)
+- Client has_many Communications (lifetime history)
+- Lead belongs_to Client
 - Lead belongs_to Agent (User)
-- Booking belongs_to Lead, belongs_to TourDeparture
+- Booking belongs_to Client
+- Booking belongs_to Lead (optional - for conversion tracking)
+- Booking belongs_to TourDeparture
 - Payment belongs_to Booking
 - TourDeparture belongs_to Tour
-- Communication belongs_to Lead or Booking (polymorphic)
+- Communication belongs_to Client (required)
+- Communication belongs_to Lead (optional - inquiry context)
+- Communication belongs_to Booking (optional - booking context)
 - Activity tracks all changes (audit log)
 
 ### 7.4 Integration Points
@@ -2110,6 +2232,8 @@ I18n.t('leads.status.new') # => "Новый" (ru) or "New" (en)
 | 1.1 | 2026-01-07 | Technical Team | Updated tech stack to Rails 8 modern defaults (SQLite3, Solid gems, built-in auth) |
 | 1.2 | 2026-01-07 | Product Team | Major update: WhatsApp via wazzup24 as primary communication channel. Added WhatsApp integration for lead capture and customer communication. |
 | 1.3 | 2026-01-07 | Product Team | Added Russian & English localization (Phase 1) and multi-currency support (USD, KZT, EUR, RUB) in Phase 1. Updated data models and requirements. |
+| 1.4 | 2026-01-10 | Product Team | **CRITICAL ARCHITECTURE CHANGE:** Introduced Client model to separate customer identity from sales opportunities. Client-centric architecture enables repeat customers, multiple leads per client, and lifetime value tracking. Updated data model, user stories, and functional requirements. |
+| 1.5 | 2026-01-10 | Development Team | **Implementation Status Update:** Completed Bookings and Payments views with comprehensive CRUD, payment tracking, and modern UI/UX. Resolved all Client-Centric Architecture migration bugs. Enhanced Client show page with SaaS-style design. |
 
 ---
 

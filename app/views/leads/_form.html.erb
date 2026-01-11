@@ -1,6 +1,7 @@
 <%= form_with(model: lead, local: true, class: "space-y-6") do |form| %>
+  <!-- Error Messages -->
   <% if lead.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
+    <div class="rounded-lg bg-red-50 p-4 border border-red-200">
       <div class="flex">
         <div class="flex-shrink-0">
           <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -12,7 +13,7 @@
             <%= pluralize(lead.errors.count, "error") %> prohibited this lead from being saved:
           </h3>
           <div class="mt-2 text-sm text-red-700">
-            <ul class="list-disc pl-5 space-y-1">
+            <ul class="list-disc list-inside space-y-1">
               <% lead.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
@@ -23,68 +24,156 @@
     </div>
   <% end %>
 
-  <div class="bg-white shadow rounded-lg">
-    <div class="px-4 py-5 sm:p-6">
-      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <!-- Name -->
-        <div class="sm:col-span-3">
-          <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :name,
-              required: true,
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-              placeholder: "Full name" %>
-        </div>
+  <!-- Main Form Card -->
+  <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+    <!-- Client Information Section -->
+    <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+      <h3 class="text-lg font-medium text-gray-900">Client Information</h3>
+      <p class="mt-1 text-sm text-gray-600">Select an existing client or create a new one</p>
+    </div>
 
-        <!-- Phone -->
-        <div class="sm:col-span-3">
-          <%= form.label :phone, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.telephone_field :phone,
-              required: true,
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-              placeholder: "+1234567890" %>
-          <p class="mt-1 text-sm text-gray-500">Include country code (e.g., +1, +7)</p>
-        </div>
+    <div class="px-6 py-6 space-y-6">
+      <!-- Client Selection Toggle -->
+      <div class="flex items-center space-x-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="radio" name="client_option" value="existing" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" <%= 'checked' if lead.persisted? || params[:client_id].present? %>>
+          <span class="ml-3 text-sm font-medium text-gray-700">Select Existing Client</span>
+        </label>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="radio" name="client_option" value="new" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" <%= 'checked' unless lead.persisted? || params[:client_id].present? %>>
+          <span class="ml-3 text-sm font-medium text-gray-700">Create New Client</span>
+        </label>
+      </div>
 
-        <!-- Email -->
-        <div class="sm:col-span-3">
-          <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.email_field :email,
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
-              placeholder: "email@example.com" %>
-        </div>
+      <!-- Existing Client Selection -->
+      <div id="existing-client-section" class="<%= 'hidden' unless lead.persisted? || params[:client_id].present? %>">
+        <%= form.label :client_id, "Select Client", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.select :client_id,
+            options_from_collection_for_select(Client.order(:name), :id, :name, lead.client_id || params[:client_id]),
+            { include_blank: 'Choose a client...' },
+            class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        <p class="mt-2 text-xs text-gray-500">Select from existing clients</p>
+      </div>
 
+      <!-- New Client Fields -->
+      <div id="new-client-section" class="<%= 'hidden' if lead.persisted? || params[:client_id].present? %>">
+        <%= form.fields_for :client, lead.client || Client.new do |client_form| %>
+          <div class="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Name -->
+              <div>
+                <%= client_form.label :name, "Client Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.text_field :name,
+                    class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    placeholder: "Full name" %>
+              </div>
+
+              <!-- Phone -->
+              <div>
+                <%= client_form.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.telephone_field :phone,
+                    class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    placeholder: "+1234567890" %>
+                <p class="mt-1 text-xs text-gray-500">Include country code (e.g., +1, +7, +77)</p>
+              </div>
+
+              <!-- Email -->
+              <div>
+                <%= client_form.label :email, "Email (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.email_field :email,
+                    class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                    placeholder: "email@example.com" %>
+              </div>
+
+              <!-- Preferred Language -->
+              <div>
+                <%= client_form.label :preferred_language, "Preferred Language", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.select :preferred_language,
+                    [['English', 'en'], ['Russian', 'ru']],
+                    { include_blank: 'Select language...' },
+                    class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+                <p class="mt-1 text-xs text-gray-500">For communications and templates</p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Lead Details Section -->
+    <div class="px-6 py-5 border-t border-b border-gray-200 bg-gray-50">
+      <h3 class="text-base font-medium text-gray-900">Lead Details</h3>
+      <p class="mt-1 text-sm text-gray-600">Status, assignment, and tour interest</p>
+    </div>
+
+    <div class="px-6 py-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <!-- Status -->
-        <div class="sm:col-span-3">
-          <%= form.label :status, class: "block text-sm font-medium text-gray-700" %>
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :status,
               Lead.statuses.keys.map { |s| [s.titleize, s] },
               {},
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+              class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          <p class="mt-1 text-xs text-gray-500">Current status in the sales pipeline</p>
         </div>
 
         <!-- Assigned Agent -->
-        <div class="sm:col-span-3">
-          <%= form.label :assigned_agent_id, "Assigned Agent", class: "block text-sm font-medium text-gray-700" %>
+        <div>
+          <%= form.label :assigned_agent_id, "Assigned Agent", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :assigned_agent_id,
               [['Unassigned', nil]] + User.agents.order(:name).map { |a| [a.name, a.id] },
               {},
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+              class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          <p class="mt-1 text-xs text-gray-500">Agent responsible for this lead</p>
         </div>
 
         <!-- Tour Interest -->
-        <div class="sm:col-span-3">
-          <%= form.label :tour_interest_id, "Tour Interest", class: "block text-sm font-medium text-gray-700" %>
+        <div class="sm:col-span-2">
+          <%= form.label :tour_interest_id, "Tour Interest", class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :tour_interest_id,
               [['None', nil]] + (@tours || Tour.active.order(:name)).map { |t| [t.name, t.id] },
               {},
-              class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+              class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          <p class="mt-1 text-xs text-gray-500">Tour the client is interested in (optional)</p>
         </div>
       </div>
     </div>
 
-    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-3">
-      <%= link_to "Cancel", lead.persisted? ? lead_path(lead) : leads_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      <%= form.submit (lead.persisted? ? "Update Lead" : "Create Lead"), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <!-- Form Actions -->
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
+      <%= link_to "Cancel", lead.persisted? ? lead_path(lead) : leads_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
+      <%= form.submit (lead.persisted? ? "Update Lead" : "Create Lead"), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
     </div>
   </div>
 <% end %>
+
+<!-- Client Selection Toggle Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const existingRadio = document.querySelector('input[name="client_option"][value="existing"]');
+    const newRadio = document.querySelector('input[name="client_option"][value="new"]');
+    const existingSection = document.getElementById('existing-client-section');
+    const newSection = document.getElementById('new-client-section');
+
+    function toggleSections() {
+      if (existingRadio.checked) {
+        existingSection.classList.remove('hidden');
+        newSection.classList.add('hidden');
+        // Clear new client fields
+        newSection.querySelectorAll('input, select').forEach(field => {
+          if (field.type !== 'hidden') field.value = '';
+        });
+      } else {
+        existingSection.classList.add('hidden');
+        newSection.classList.remove('hidden');
+        // Clear client selection
+        const clientSelect = existingSection.querySelector('select');
+        if (clientSelect) clientSelect.value = '';
+      }
+    }
+
+    existingRadio.addEventListener('change', toggleSections);
+    newRadio.addEventListener('change', toggleSections);
+  });
+</script>

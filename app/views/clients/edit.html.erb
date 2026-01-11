@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center space-x-4 mb-4">
+        <%= link_to client_path(@client), class: "text-gray-400 hover:text-gray-600 transition-colors" do %>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Edit Client</h1>
+          <p class="mt-1 text-sm text-gray-500">
+            Update <%= @client.name %>'s information
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <%= render 'form', client: @client %>
+
+    <!-- Delete Action -->
+    <div class="mt-6">
+      <div class="bg-white shadow-sm rounded-xl border border-red-200 overflow-hidden">
+        <div class="px-6 py-5 bg-red-50">
+          <h3 class="text-base font-medium text-red-900">Danger Zone</h3>
+          <p class="mt-1 text-sm text-red-700">Permanently delete this client and all associated data</p>
+        </div>
+        <div class="px-6 py-4 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-900 font-medium">Delete this client</p>
+            <p class="text-xs text-gray-500">This action cannot be undone. All leads and bookings will be deleted.</p>
+          </div>
+          <%= button_to "Delete Client", client_path(@client),
+              method: :delete,
+              data: { confirm: "Are you sure you want to delete #{@client.name}? This will also delete all associated leads and bookings." },
+              class: "inline-flex items-center px-4 py-2 border border-red-300 rounded-lg shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

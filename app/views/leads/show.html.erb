@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="md:flex md:items-center md:justify-between mb-6">
       <div class="flex-1 min-w-0">
-        <h1 class="text-3xl font-bold text-gray-900"><%= @lead.name %></h1>
+        <h1 class="text-3xl font-bold text-gray-900"><%= @lead.client.name %></h1>
         <div class="mt-1 flex items-center">
           <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full <%= status_badge_class(@lead.status) %>">
             <%= @lead.status.titleize %>
@@ -34,13 +34,20 @@
 
             <dl class="space-y-4">
               <div>
+                <dt class="text-sm font-medium text-gray-500">Client</dt>
+                <dd class="mt-1 text-sm">
+                  <%= link_to @lead.client.name, client_path(@lead.client), class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+                </dd>
+              </div>
+
+              <div>
                 <dt class="text-sm font-medium text-gray-500">Phone</dt>
-                <dd class="mt-1 text-sm text-gray-900"><%= @lead.phone %></dd>
+                <dd class="mt-1 text-sm text-gray-900"><%= @lead.client.phone %></dd>
               </div>
 
               <div>
                 <dt class="text-sm font-medium text-gray-500">Email</dt>
-                <dd class="mt-1 text-sm text-gray-900"><%= @lead.email || '-' %></dd>
+                <dd class="mt-1 text-sm text-gray-900"><%= @lead.client.email || '-' %></dd>
               </div>
 
               <div>
@@ -102,6 +109,18 @@
               <% if @lead.unread_messages_count > 0 %>
                 <%= button_to "Mark Messages as Read (#{@lead.unread_messages_count})", "#", method: :patch, class: "w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
               <% end %>
+
+              <!-- Convert to Booking -->
+              <% if @lead.status_qualified? || @lead.status_quoted? %>
+                <div class="pt-3 border-t border-gray-200">
+                  <%= link_to "#", class: "w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+                    <svg class="h-5 w-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Convert to Booking
+                  <% end %>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>
@@ -142,7 +161,7 @@
                             <div>
                               <div class="text-sm">
                                 <span class="font-medium text-gray-900">
-                                  <%= comm.inbound? ? @lead.name : (current_user.name rescue 'Agent') %>
+                                  <%= comm.inbound? ? @lead.client.name : (current_user.name rescue 'Agent') %>
                                 </span>
                                 <span class="text-gray-500">
                                   • <%= comm.communication_type.titleize %>
@@ -179,6 +198,29 @@
                 <p class="mt-1 text-sm text-gray-500">Start a conversation with this lead.</p>
               </div>
             <% end %>
+
+            <!-- Send Message Form -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+              <h4 class="text-sm font-medium text-gray-900 mb-3">Send Message</h4>
+              <%= form_with url: "#", method: :post, local: true, class: "space-y-3" do |f| %>
+                <div>
+                  <%= f.label :communication_type, "Message Type", class: "block text-sm font-medium text-gray-700" %>
+                  <%= f.select :communication_type,
+                      [['WhatsApp', 'whatsapp'], ['Email', 'email']],
+                      {},
+                      class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+                </div>
+                <div>
+                  <%= f.label :body, "Message", class: "block text-sm font-medium text-gray-700" %>
+                  <%= f.text_area :body,
+                      rows: 4,
+                      required: true,
+                      class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+                      placeholder: "Type your message..." %>
+                </div>
+                <%= f.submit "Send Message", class: "w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>

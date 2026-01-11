@@ -17,24 +17,43 @@ Rails.application.routes.draw do
   # Dashboard
   get "dashboard", to: "dashboard#index"
 
-  # Leads
+  # Clients - Central hub for customer management
+  resources :clients do
+    resources :leads, only: [:new, :create]
+    resources :bookings, only: [:new, :create]
+    resources :communications, only: [:create]
+  end
+
+  # Leads - Can also be created standalone or from clients
   resources :leads do
     member do
       post :assign
       patch :mark_contacted
+      post :convert_to_booking
     end
     resources :communications, only: [:create]
   end
 
-  # Tours
+  # Tours and Departures
   resources :tours do
     resources :tour_departures, shallow: true
   end
 
-  # Bookings
+  # Bookings - Can be created from leads or clients
   resources :bookings do
-    resources :payments, only: [:new, :create]
+    member do
+      patch :confirm
+      patch :cancel
+    end
+    resources :payments, only: [:new, :create, :show]
+    resources :communications, only: [:create]
   end
+
+  # Payments (accessible via bookings)
+  resources :payments, only: [:index, :show, :edit, :update]
+
+  # WhatsApp Templates
+  resources :whatsapp_templates
 
   # Webhooks (no CSRF protection)
   namespace :webhooks do

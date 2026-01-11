@@ -1,2 +1,58 @@
-<h1>Bookings#new</h1>
-<p>Find me in app/views/bookings/new.html.erb</p>
+<div class="px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center space-x-4">
+      <%= link_to bookings_path, class: "text-gray-400 hover:text-gray-600" do %>
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      <% end %>
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">New Booking</h1>
+        <p class="mt-1 text-sm text-gray-500">
+          Create a new booking for a tour departure
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Info -->
+  <% if defined?(@lead) && @lead.present? %>
+    <div class="mb-6 rounded-lg bg-blue-50 p-4 border border-blue-200">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">Converting Lead to Booking</h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <p>Creating booking for <%= @lead.client.name %> from <%= link_to "Lead ##{@lead.id}", @lead, class: "font-medium underline" %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% elsif defined?(@client) && @client.present? %>
+    <div class="mb-6 rounded-lg bg-green-50 p-4 border border-green-200">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-green-800">Direct Booking</h3>
+          <div class="mt-2 text-sm text-green-700">
+            <p>Creating booking for <%= @client.name %> (<%= link_to "View Client", @client, class: "font-medium underline" %>)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Form -->
+  <div class="max-w-3xl">
+    <%= render "form", booking: @booking %>
+  </div>
+</div>

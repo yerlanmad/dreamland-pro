@@ -10,53 +10,68 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_07_162456) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_10_123128) do
   create_table "bookings", force: :cascade do |t|
+    t.integer "client_id", null: false
     t.datetime "created_at", null: false
     t.string "currency"
-    t.integer "lead_id", null: false
+    t.integer "lead_id"
     t.integer "num_participants"
     t.string "status"
     t.decimal "total_amount"
     t.integer "tour_departure_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_bookings_on_client_id"
     t.index ["lead_id"], name: "index_bookings_on_lead_id"
     t.index ["tour_departure_id"], name: "index_bookings_on_tour_departure_id"
   end
 
+  create_table "clients", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name", null: false
+    t.text "notes"
+    t.string "phone", null: false
+    t.string "preferred_language"
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_clients_on_created_at"
+    t.index ["phone"], name: "index_clients_on_phone", unique: true
+  end
+
   create_table "communications", force: :cascade do |t|
     t.text "body"
-    t.integer "communicable_id", null: false
-    t.string "communicable_type", null: false
+    t.integer "booking_id"
+    t.integer "client_id", null: false
     t.string "communication_type", null: false
     t.datetime "created_at", null: false
     t.string "direction", null: false
+    t.integer "lead_id"
     t.string "media_type"
     t.string "media_url"
     t.string "subject"
     t.datetime "updated_at", null: false
     t.string "whatsapp_message_id"
     t.string "whatsapp_status"
-    t.index ["communicable_type", "communicable_id"], name: "index_communications_on_communicable"
-    t.index ["communicable_type", "communicable_id"], name: "index_communications_on_communicable_type_and_communicable_id"
+    t.index ["booking_id"], name: "index_communications_on_booking_id"
+    t.index ["client_id"], name: "index_communications_on_client_id"
     t.index ["communication_type"], name: "index_communications_on_communication_type"
+    t.index ["created_at"], name: "index_communications_on_created_at"
+    t.index ["lead_id"], name: "index_communications_on_lead_id"
     t.index ["whatsapp_message_id"], name: "index_communications_on_whatsapp_message_id"
   end
 
   create_table "leads", force: :cascade do |t|
     t.integer "assigned_agent_id"
+    t.integer "client_id", null: false
     t.datetime "created_at", null: false
-    t.string "email"
     t.datetime "last_message_at"
-    t.string "name", null: false
-    t.string "phone", null: false
     t.string "source", default: "whatsapp", null: false
     t.string "status", default: "new", null: false
     t.integer "tour_interest_id"
     t.integer "unread_messages_count", default: 0
     t.datetime "updated_at", null: false
     t.index ["assigned_agent_id"], name: "index_leads_on_assigned_agent_id"
-    t.index ["phone"], name: "index_leads_on_phone", unique: true
+    t.index ["client_id"], name: "index_leads_on_client_id"
     t.index ["source"], name: "index_leads_on_source"
     t.index ["status"], name: "index_leads_on_status"
   end
@@ -118,8 +133,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_07_162456) do
     t.text "variables"
   end
 
+  add_foreign_key "bookings", "clients"
   add_foreign_key "bookings", "leads"
   add_foreign_key "bookings", "tour_departures"
+  add_foreign_key "communications", "bookings"
+  add_foreign_key "communications", "clients"
+  add_foreign_key "communications", "leads"
+  add_foreign_key "leads", "clients"
   add_foreign_key "payments", "bookings"
   add_foreign_key "tour_departures", "tours"
 end

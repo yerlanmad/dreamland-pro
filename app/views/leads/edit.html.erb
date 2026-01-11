@@ -1,11 +1,23 @@
-<div class="py-6">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="mb-6">
-      <%= link_to "← Back to Lead", lead_path(@lead), class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center space-x-4 mb-4">
+        <%= link_to lead_path(@lead), class: "text-gray-400 hover:text-gray-600 transition-colors" do %>
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        <% end %>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Edit Lead</h1>
+          <p class="mt-1 text-sm text-gray-500">
+            Update lead details for <%= @lead.client.name %>
+          </p>
+        </div>
+      </div>
     </div>
 
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Lead</h1>
-
+    <!-- Form -->
     <%= render 'form', lead: @lead %>
   </div>
 </div>
