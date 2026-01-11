@@ -1,0 +1,111 @@
+<div class="bg-white shadow-sm rounded-xl border border-gray-200">
+  <%= form_with(model: [@tour, tour_departure], local: true, class: "space-y-8") do |form| %>
+    <!-- Tour Context (Read-only) -->
+    <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+      <h3 class="text-lg font-medium text-gray-900">Tour Information</h3>
+      <div class="mt-4 space-y-2">
+        <p class="text-sm text-gray-700">
+          <span class="font-medium">Tour:</span> <%= @tour.name %>
+        </p>
+        <p class="text-sm text-gray-700">
+          <span class="font-medium">Base Price:</span> <%= format_tour_price(@tour.base_price, @tour.currency) %>
+        </p>
+        <p class="text-sm text-gray-700">
+          <span class="font-medium">Default Capacity:</span> <%= @tour.capacity %> spots
+        </p>
+      </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="px-6">
+      <div class="rounded-lg bg-blue-50 border border-blue-200 p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-blue-700">
+              Price, currency, and capacity are pre-filled from the tour settings, but you can adjust them for this specific departure if needed.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Departure Details -->
+    <div class="px-6">
+      <div class="space-y-6">
+        <h3 class="text-lg font-medium text-gray-900">Departure Details</h3>
+
+        <!-- Departure Date -->
+        <div>
+          <%= form.label :departure_date, "Departure Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.date_field :departure_date,
+              class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+              required: true %>
+          <% if tour_departure.errors[:departure_date].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= tour_departure.errors[:departure_date].join(", ") %></p>
+          <% end %>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <%= form.label :price, "Price", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative rounded-lg shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm"><%= currency_symbol(tour_departure.currency || @tour.currency) %></span>
+            </div>
+            <%= form.number_field :price,
+                class: "block w-full pl-10 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                step: "0.01",
+                min: "0",
+                required: true %>
+          </div>
+          <% if tour_departure.errors[:price].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= tour_departure.errors[:price].join(", ") %></p>
+          <% end %>
+        </div>
+
+        <!-- Currency -->
+        <div>
+          <%= form.label :currency, "Currency", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.select :currency,
+              options_for_select([['USD', 'USD'], ['KZT', 'KZT'], ['EUR', 'EUR'], ['RUB', 'RUB']], tour_departure.currency || @tour.currency),
+              {},
+              class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+              required: true %>
+          <% if tour_departure.errors[:currency].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= tour_departure.errors[:currency].join(", ") %></p>
+          <% end %>
+        </div>
+
+        <!-- Capacity -->
+        <div>
+          <%= form.label :capacity, "Capacity", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative rounded-lg shadow-sm">
+            <%= form.number_field :capacity,
+                class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-12",
+                min: "1",
+                required: true %>
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">spots</span>
+            </div>
+          </div>
+          <% if tour_departure.errors[:capacity].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= tour_departure.errors[:capacity].join(", ") %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3 rounded-b-xl">
+      <%= link_to "Cancel", @tour ? tour_path(@tour) : tour_path(tour_departure.tour),
+          class: "inline-flex items-center px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all" %>
+      <%= form.submit tour_departure.new_record? ? "Create Departure" : "Update Departure",
+          class: "inline-flex items-center px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all" %>
+    </div>
+  <% end %>
+</div>

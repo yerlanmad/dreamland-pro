@@ -63,6 +63,8 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  # Stub HTTP requests in tests
+  gem "webmock"
 end
 
 gem "rspec-rails", "~> 8.0", groups: [:development, :test]
@@ -75,3 +77,6 @@ gem "kaminari", "~> 1.2"
 
 # Tailwind CSS for Rails
 gem "tailwindcss-rails", "~> 3.0"
+
+# HTTP client for wazzup24 API
+gem "httparty", "~> 0.21"

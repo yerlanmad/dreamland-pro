@@ -3,34 +3,13 @@ class CommunicationsController < ApplicationController
   before_action :set_lead_or_booking, only: [:create]
 
   def create
-    @communication = @client.communications.new(communication_params)
-    @communication.direction = :outbound # Messages from CRM are outbound
-
-    # Associate with lead or booking if provided
-    @communication.lead_id = @lead.id if @lead
-    @communication.booking_id = @booking.id if @booking
-
-    if @communication.save
-      # Mark lead messages as read if replying to a lead
-      @lead.mark_all_messages_read! if @lead
-
-      # Redirect back to the appropriate page
-      if @lead
-        redirect_to @lead, notice: "Message sent successfully."
-      elsif @booking
-        redirect_to @booking, notice: "Message sent successfully."
-      else
-        redirect_to @client, notice: "Message sent successfully."
-      end
+    case params[:communication_type]
+    when 'whatsapp'
+      send_whatsapp_message
+    when 'email'
+      send_email_message
     else
-      # Handle errors - redirect back with alert
-      if @lead
-        redirect_to @lead, alert: "Failed to send message: #{@communication.errors.full_messages.join(', ')}"
-      elsif @booking
-        redirect_to @booking, alert: "Failed to send message: #{@communication.errors.full_messages.join(', ')}"
-      else
-        redirect_to @client, alert: "Failed to send message: #{@communication.errors.full_messages.join(', ')}"
-      end
+      redirect_back_with_alert('Invalid communication type')
     end
   end
 
@@ -54,6 +33,50 @@ class CommunicationsController < ApplicationController
   def set_lead_or_booking
     @lead = Lead.find(params[:lead_id]) if params[:lead_id].present?
     @booking = Booking.find(params[:booking_id]) if params[:booking_id].present?
+  end
+
+  def send_whatsapp_message
+    template = WhatsappTemplate.find(params[:template_id]) if params[:template_id].present?
+
+    result = Whatsapp::SendMessageService.new(
+      client: @client,
+      body: params[:body],
+      template: template
+    ).call
+
+    if result[:success]
+      # Mark lead messages as read if replying to a lead
+      @lead.mark_all_messages_read! if @lead
+
+      redirect_back_with_notice('Message sent successfully')
+    else
+      redirect_back_with_alert("Failed to send message: #{result[:error]}")
+    end
+  end
+
+  def send_email_message
+    # TODO: Implement email sending (future phase)
+    redirect_back_with_alert('Email communication not yet implemented')
+  end
+
+  def redirect_back_with_notice(message)
+    if @lead
+      redirect_to @lead, notice: message
+    elsif @booking
+      redirect_to @booking, notice: message
+    else
+      redirect_to @client, notice: message
+    end
+  end
+
+  def redirect_back_with_alert(message)
+    if @lead
+      redirect_to @lead, alert: message
+    elsif @booking
+      redirect_to @booking, alert: message
+    else
+      redirect_to @client, alert: message
+    end
   end
 
   def communication_params

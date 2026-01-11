@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-6"><ol class="flex items-center space-x-2">
+      <li><%= link_to "Tours", tours_path, class: "text-gray-500 hover:text-gray-700" %></li>
+      <li class="flex items-center"><svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg><%= link_to @tour.name, tour_path(@tour), class: "text-gray-500 hover:text-gray-700" %></li>
+      <li class="flex items-center"><svg class="h-5 w-5 text-gray-400 mx-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-900 font-medium">Departure</span></li>
+    </ol></nav>
+
+    <!-- Header Card -->
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 mb-6 overflow-hidden">
+      <div class="px-8 py-8">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4"><%= @tour.name %></h1>
+            <div class="text-5xl font-bold text-indigo-600 mb-4"><%= @tour_departure.departure_date.strftime('%b %d, %Y') %></div>
+            <div class="flex flex-wrap gap-4">
+              <span class="flex items-center text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg"><svg class="h-4 w-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="font-semibold"><%= format_tour_price(@tour_departure.price, @tour_departure.currency) %></span></span>
+              <span class="flex items-center text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg><%= @tour_departure.capacity %> spots</span>
+              <%= departure_status_badge(@tour_departure) %>
+            </div>
+            <div class="mt-4"><div class="w-full bg-gray-200 rounded-full h-3"><div class="<%= capacity_color_class(@tour_departure.available_spots, @tour_departure.capacity) %> h-3 rounded-full" style="width: <%= capacity_percentage(@tour_departure.available_spots, @tour_departure.capacity) %>%"></div></div><p class="mt-2 text-sm text-gray-600"><%= @tour_departure.available_spots %> of <%= @tour_departure.capacity %> spots available</p></div>
+          </div>
+          <div class="flex flex-col space-y-3 ml-6">
+            <%= link_to edit_tour_departure_path(@tour_departure), class: "inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all" do %><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Edit<% end %>
+            <%= button_to "Delete", tour_departure_path(@tour_departure), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center justify-center px-5 py-2.5 border border-red-300 rounded-lg text-sm font-medium text-red-700 bg-white hover:bg-red-50 transition-all" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings -->
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-200"><h3 class="text-lg font-medium text-gray-900">Bookings</h3></div>
+      <% if @bookings.any? %>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reference</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Participants</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+          </tr></thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @bookings.each do |booking| %>
+              <tr class="hover:bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-medium text-gray-900"><%= booking.reference_number %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= booking.client.name %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= booking.num_participants %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900"><%= format_tour_price(booking.total_amount, booking.currency) %></td>
+                <td class="px-6 py-4 whitespace-nowrap"><%= booking_status_badge(booking.status) %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><%= link_to "View", booking, class: "text-indigo-600 hover:text-indigo-900" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="text-center py-20"><div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 mb-5"><svg class="h-10 w-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <h3 class="text-base font-semibold text-gray-900 mb-2">No bookings yet</h3><p class="text-sm text-gray-500">No bookings have been made for this departure.</p></div>
+      <% end %>
+    </div>
+  </div>
+</div>

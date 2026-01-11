@@ -53,7 +53,11 @@ Rails.application.routes.draw do
   resources :payments, only: [:index, :show, :edit, :update]
 
   # WhatsApp Templates
-  resources :whatsapp_templates
+  resources :whatsapp_templates do
+    member do
+      patch :toggle_active
+    end
+  end
 
   # Webhooks (no CSRF protection)
   namespace :webhooks do
