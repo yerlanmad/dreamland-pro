@@ -115,6 +115,21 @@ module Whatsapp
         return { message_id: message_data['messageId'], status: :skipped, reason: 'Unknown client' }
       end
 
+      # Check if we already have a communication for this message
+      # This prevents duplicates when we send via API and receive echo webhook
+      existing_communication = Communication.find_by(whatsapp_message_id: message_data['messageId'])
+
+      if existing_communication
+        # Update existing communication with echo data if needed
+        existing_communication.update!(
+          whatsapp_status: message_data['status'],
+          sent_at: parse_datetime(message_data['dateTime']) || existing_communication.sent_at
+        )
+        Rails.logger.info("Echo message matched existing communication: #{existing_communication.id}")
+        return { message_id: message_data['messageId'], status: :updated, communication_id: existing_communication.id }
+      end
+
+      # Create new communication only if it doesn't exist (sent from phone/iframe, not our API)
       lead = client.leads.active.order(updated_at: :desc).first
 
       communication = Communication.create!(
