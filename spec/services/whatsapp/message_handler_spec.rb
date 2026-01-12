@@ -14,17 +14,29 @@ RSpec.describe Whatsapp::MessageHandler do
     context 'with valid payload' do
       subject(:handler) { described_class.new(valid_payload) }
 
-      context 'when lead does not exist' do
+      context 'when client and lead do not exist' do
+        it 'creates a new client' do
+          expect { handler.process }.to change(Client, :count).by(1)
+        end
+
         it 'creates a new lead' do
           expect { handler.process }.to change(Lead, :count).by(1)
+        end
+
+        it 'sets client attributes correctly' do
+          handler.process
+          client = Client.last
+
+          expect(client.phone).to eq('+77001234567')
+          expect(client.name).to eq('John Doe')
+          expect(client.preferred_language).to eq('ru')
         end
 
         it 'sets lead attributes correctly' do
           handler.process
           lead = Lead.last
 
-          expect(lead.phone).to eq('+77001234567')
-          expect(lead.name).to eq('John Doe')
+          expect(lead.client).to be_present
           expect(lead.source).to eq('whatsapp')
           expect(lead.status).to eq('contacted')  # Status changes from 'new' to 'contacted' during processing
         end
@@ -37,7 +49,8 @@ RSpec.describe Whatsapp::MessageHandler do
           handler.process
           communication = Communication.last
 
-          expect(communication.communicable).to be_a(Lead)
+          expect(communication.client).to be_a(Client)
+          expect(communication.lead).to be_a(Lead)
           expect(communication.communication_type).to eq('whatsapp')
           expect(communication.direction).to eq('inbound')
           expect(communication.body).to eq('Hello, I want to book a tour')
@@ -66,30 +79,63 @@ RSpec.describe Whatsapp::MessageHandler do
           expect(lead.status).to eq('contacted')
         end
 
-        it 'returns success response with lead_id' do
+        it 'returns success response with lead_id and client_id' do
           result = handler.process
 
           expect(result[:success]).to be true
           expect(result[:lead_id]).to be_present
+          expect(result[:client_id]).to be_present
         end
       end
 
-      context 'when lead already exists' do
+      context 'when client already exists' do
+        let!(:existing_client) do
+          create(:client,
+                 phone: '+77001234567',
+                 name: 'Existing Client Name')
+        end
+
+        it 'does not create a new client' do
+          expect { handler.process }.not_to change(Client, :count)
+        end
+
+        it 'does not update client name' do
+          handler.process
+          expect(existing_client.reload.name).to eq('Existing Client Name')
+        end
+
+        it 'creates a new lead for existing client' do
+          expect { handler.process }.to change(Lead, :count).by(1)
+        end
+
+        it 'associates lead with existing client' do
+          handler.process
+          lead = Lead.last
+
+          expect(lead.client).to eq(existing_client)
+        end
+      end
+
+      context 'when client and lead already exist' do
+        let!(:existing_client) do
+          create(:client,
+                 phone: '+77001234567',
+                 name: 'Jane Smith')
+        end
+
         let!(:existing_lead) do
           create(:lead,
-                 phone: '+77001234567',
-                 name: 'Jane Smith',
+                 client: existing_client,
                  status: :qualified,
                  unread_messages_count: 2)
         end
 
-        it 'does not create a new lead' do
-          expect { handler.process }.not_to change(Lead, :count)
+        it 'does not create a new client' do
+          expect { handler.process }.not_to change(Client, :count)
         end
 
-        it 'does not update lead name' do
-          handler.process
-          expect(existing_lead.reload.name).to eq('Jane Smith')
+        it 'does not create a new lead' do
+          expect { handler.process }.not_to change(Lead, :count)
         end
 
         it 'does not change lead status if not new' do
@@ -106,11 +152,41 @@ RSpec.describe Whatsapp::MessageHandler do
           expect { handler.process }.to change(Communication, :count).by(1)
         end
 
-        it 'associates communication with existing lead' do
+        it 'associates communication with existing client and lead' do
           handler.process
           communication = Communication.last
 
-          expect(communication.communicable).to eq(existing_lead)
+          expect(communication.client).to eq(existing_client)
+          expect(communication.lead).to eq(existing_lead)
+        end
+      end
+
+      context 'when client has multiple leads' do
+        let!(:existing_client) do
+          create(:client, phone: '+77001234567')
+        end
+
+        let!(:old_lead) do
+          create(:lead,
+                 client: existing_client,
+                 status: :won)
+        end
+
+        let!(:active_lead) do
+          create(:lead,
+                 client: existing_client,
+                 status: :qualified)
+        end
+
+        it 'uses the first active lead' do
+          handler.process
+          communication = Communication.last
+
+          expect(communication.lead).to eq(active_lead)
+        end
+
+        it 'does not create a new lead' do
+          expect { handler.process }.not_to change(Lead, :count)
         end
       end
 
@@ -119,9 +195,56 @@ RSpec.describe Whatsapp::MessageHandler do
 
         it 'uses default name "WhatsApp Contact"' do
           handler.process
-          lead = Lead.last
+          client = Client.last
 
-          expect(lead.name).to eq('WhatsApp Contact')
+          expect(client.name).to eq('WhatsApp Contact')
+        end
+      end
+
+      context 'when message contains only media (no text)' do
+        let(:media_only_payload) do
+          {
+            'chatId' => '+77001234567',
+            'contentUri' => 'https://example.com/image.jpg',
+            'mediaType' => 'image',
+            'senderName' => 'John Doe',
+            'messageId' => 'msg_media_123'
+          }
+        end
+        subject(:handler) { described_class.new(media_only_payload) }
+
+        it 'creates a new client' do
+          expect { handler.process }.to change(Client, :count).by(1)
+        end
+
+        it 'creates a new lead' do
+          expect { handler.process }.to change(Lead, :count).by(1)
+        end
+
+        it 'creates a communication record' do
+          expect { handler.process }.to change(Communication, :count).by(1)
+        end
+
+        it 'sets communication body to [Media]' do
+          handler.process
+          communication = Communication.last
+
+          expect(communication.body).to eq('[Media]')
+        end
+
+        it 'captures media URL and type' do
+          handler.process
+          communication = Communication.last
+
+          expect(communication.media_url).to eq('https://example.com/image.jpg')
+          expect(communication.media_type).to eq('image')
+        end
+
+        it 'returns success response' do
+          result = handler.process
+
+          expect(result[:success]).to be true
+          expect(result[:communication_id]).to be_present
         end
       end
     end
@@ -130,6 +253,10 @@ RSpec.describe Whatsapp::MessageHandler do
       context 'when chatId is missing' do
         let(:invalid_payload) { { 'text' => 'Hello', 'senderName' => 'John' } }
         subject(:handler) { described_class.new(invalid_payload) }
+
+        it 'does not create a client' do
+          expect { handler.process }.not_to change(Client, :count)
+        end
 
         it 'does not create a lead' do
           expect { handler.process }.not_to change(Lead, :count)
@@ -147,6 +274,10 @@ RSpec.describe Whatsapp::MessageHandler do
       context 'when text is missing' do
         let(:invalid_payload) { { 'chatId' => '+77001234567', 'senderName' => 'John' } }
         subject(:handler) { described_class.new(invalid_payload) }
+
+        it 'does not create a client' do
+          expect { handler.process }.not_to change(Client, :count)
+        end
 
         it 'does not create a lead' do
           expect { handler.process }.not_to change(Lead, :count)
@@ -177,13 +308,13 @@ RSpec.describe Whatsapp::MessageHandler do
 
         it 'normalizes phone correctly' do
           handler.process
-          lead = Lead.last
+          client = Client.last
 
-          expect(lead.phone).to eq('+77001234567')
+          expect(client.phone).to eq('+77001234567')
         end
       end
 
-      context 'when phone has @ symbol (wazzup24 format)' do
+      context 'when phone has @ symbol (defensive handling)' do
         let(:payload) do
           {
             'chatId' => '77001234567@c.us',
@@ -193,11 +324,11 @@ RSpec.describe Whatsapp::MessageHandler do
           }
         end
 
-        it 'removes @ and domain' do
+        it 'removes @ and domain (edge case, not expected from wazzup24)' do
           handler.process
-          lead = Lead.last
+          client = Client.last
 
-          expect(lead.phone).to eq('+77001234567')
+          expect(client.phone).to eq('+77001234567')
         end
       end
 
@@ -213,9 +344,9 @@ RSpec.describe Whatsapp::MessageHandler do
 
         it 'does not add another +' do
           handler.process
-          lead = Lead.last
+          client = Client.last
 
-          expect(lead.phone).to eq('+77001234567')
+          expect(client.phone).to eq('+77001234567')
         end
       end
     end
@@ -232,7 +363,8 @@ RSpec.describe Whatsapp::MessageHandler do
       subject(:handler) { described_class.new(payload_with_error) }
 
       before do
-        allow(Lead).to receive(:find_or_initialize_by).and_raise(StandardError.new('Database error'))
+        allow(Client).to receive(:find_by).and_return(nil)
+        allow(Client).to receive(:create!).and_raise(StandardError.new('Database error'))
       end
 
       it 'rescues exceptions and returns error response' do
@@ -242,11 +374,13 @@ RSpec.describe Whatsapp::MessageHandler do
         expect(result[:error]).to eq('Database error')
       end
 
-      it 'logs the error' do
+      it 'logs the error with details' do
         allow(Rails.logger).to receive(:error)
         handler.process
 
         expect(Rails.logger).to have_received(:error).with(/WhatsApp message processing failed: Database error/)
+        expect(Rails.logger).to have_received(:error).with(/Payload:/)
+        expect(Rails.logger).to have_received(:error).with(/Backtrace:/)
       end
     end
   end

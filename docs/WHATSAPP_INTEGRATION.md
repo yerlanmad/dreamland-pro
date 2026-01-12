@@ -399,18 +399,32 @@ Content-Type: application/json
 
 ### Phone Number Format
 
-wazzup24 expects phone numbers in WhatsApp format:
+**IMPORTANT: Updated for wazzup24 API v3**
 
-**Format**: `+[country_code][number]@c.us`
+wazzup24 API expects phone numbers **without** the `@c.us` suffix:
 
-**Examples**:
-- Russia: `+79001234567@c.us`
-- Kazakhstan: `+77001234567@c.us`
-- USA: `+11234567890@c.us`
+**API Format** (for sending): `[country_code][number]` (no + prefix, no @c.us)
+- Russia: `79001234567`
+- Kazakhstan: `77001234567`
+- USA: `11234567890`
 
-**Normalization**: The `Wazzup24Client` automatically:
+**Webhook Format** (receiving): `[country_code][number]@c.us`
+- wazzup24 **sends** `@c.us` in webhook payloads
+- We **strip** it before storing in database
+
+**Our Database Format**: `+[country_code][number]` (standard E.164)
+- Russia: `+79001234567`
+- Kazakhstan: `+77001234567`
+- USA: `+11234567890`
+
+**Normalization Flow**:
+1. **Incoming** (from webhook): `77001234567@c.us` → strip @c.us → add + → `+77001234567` (DB)
+2. **Outgoing** (to API): `+77001234567` (DB) → strip + → `77001234567` (API)
+
+The `Wazzup24Client` automatically:
+- **For incoming**: Removes `@c.us` suffix, adds `+` prefix
+- **For outgoing**: Removes `+` prefix (API requirement)
 - Removes spaces, dashes, parentheses: `+7 (900) 123-45-67` → `+79001234567`
-- Adds `@c.us` suffix if missing
 
 ### Rate Limits
 

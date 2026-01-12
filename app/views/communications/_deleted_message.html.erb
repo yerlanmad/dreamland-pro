@@ -1,0 +1,36 @@
+<div id="communication_<%= communication.id %>" class="relative flex items-start space-x-3 opacity-60">
+  <div>
+    <div class="relative px-1">
+      <div class="h-8 w-8 bg-gray-100 rounded-full ring-8 ring-white flex items-center justify-center">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="min-w-0 flex-1">
+    <div>
+      <div class="text-sm">
+        <span class="font-medium text-gray-500">
+          <%= communication.inbound? ? communication.client.name : (current_user&.name || 'Agent') %>
+        </span>
+        <span class="text-gray-400">
+          • <%= communication.communication_type.titleize %>
+          • <%= communication.direction.titleize %>
+        </span>
+        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+          Deleted
+        </span>
+      </div>
+      <p class="mt-0.5 text-sm text-gray-400">
+        <%= time_ago_in_words(communication.created_at) %> ago
+        <% if communication.deleted_at %>
+          • Deleted <%= time_ago_in_words(communication.deleted_at) %> ago
+        <% end %>
+      </p>
+    </div>
+    <div class="mt-2 text-sm text-gray-500 italic">
+      <p><%= communication.body %></p>
+    </div>
+  </div>
+</div>

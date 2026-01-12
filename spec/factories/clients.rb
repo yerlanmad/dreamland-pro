@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :client do
-    name { "MyString" }
-    phone { "MyString" }
-    email { "MyString" }
-    preferred_language { "MyString" }
-    notes { "MyText" }
+    name { Faker::Name.name }
+    phone { "+#{Faker::Number.unique.number(digits: 11)}" }
+    email { Faker::Internet.email }
+    preferred_language { :ru }
+    notes { nil }
   end
 end

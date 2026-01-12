@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   # Dashboard
   get "dashboard", to: "dashboard#index"
 
+  # Communications - Edit and delete WhatsApp messages
+  resources :communications, only: [:edit, :update, :destroy]
+
   # Clients - Central hub for customer management
   resources :clients do
     resources :leads, only: [:new, :create]
@@ -58,6 +61,11 @@ Rails.application.routes.draw do
       patch :toggle_active
     end
   end
+
+  # Settings
+  get 'settings', to: 'settings#index', as: :settings
+  get 'settings/whatsapp_channels', to: 'settings#whatsapp_channels', as: :whatsapp_channels_settings
+  post 'settings/refresh_channels', to: 'settings#refresh_channels', as: :refresh_channels_settings
 
   # Webhooks (no CSRF protection)
   namespace :webhooks do

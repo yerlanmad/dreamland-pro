@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_10_123128) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_11_122741) do
   create_table "bookings", force: :cascade do |t|
     t.integer "client_id", null: false
     t.datetime "created_at", null: false
@@ -44,10 +44,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_123128) do
     t.integer "client_id", null: false
     t.string "communication_type", null: false
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "direction", null: false
+    t.text "error_message"
     t.integer "lead_id"
     t.string "media_type"
     t.string "media_url"
+    t.datetime "sent_at"
     t.string "subject"
     t.datetime "updated_at", null: false
     t.string "whatsapp_message_id"
@@ -56,7 +59,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_10_123128) do
     t.index ["client_id"], name: "index_communications_on_client_id"
     t.index ["communication_type"], name: "index_communications_on_communication_type"
     t.index ["created_at"], name: "index_communications_on_created_at"
+    t.index ["deleted_at"], name: "index_communications_on_deleted_at"
     t.index ["lead_id"], name: "index_communications_on_lead_id"
+    t.index ["sent_at"], name: "index_communications_on_sent_at"
     t.index ["whatsapp_message_id"], name: "index_communications_on_whatsapp_message_id"
   end
 

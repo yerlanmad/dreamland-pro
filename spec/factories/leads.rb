@@ -1,8 +1,6 @@
 FactoryBot.define do
   factory :lead do
-    name { Faker::Name.name }
-    phone { "+#{Faker::Number.unique.number(digits: 12)}" }
-    email { Faker::Internet.email }
+    association :client
     source { :whatsapp }
     status { :new }
     unread_messages_count { 0 }

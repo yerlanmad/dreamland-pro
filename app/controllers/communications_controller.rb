@@ -1,6 +1,23 @@
 class CommunicationsController < ApplicationController
-  before_action :set_client
+  before_action :set_communication, only: [:edit, :update, :destroy]
+  before_action :set_client, except: [:edit, :update, :destroy]
   before_action :set_lead_or_booking, only: [:create]
+
+  def edit
+    # Render edit form
+  end
+
+  def update
+    if params[:delete_message]
+      delete_message
+    else
+      edit_message
+    end
+  end
+
+  def destroy
+    delete_message
+  end
 
   def create
     case params[:communication_type]
@@ -14,6 +31,74 @@ class CommunicationsController < ApplicationController
   end
 
   private
+
+  def set_communication
+    @communication = Communication.find(params[:id])
+    @client = @communication.client
+    @lead = @communication.lead
+    @booking = @communication.booking
+  end
+
+  def edit_message
+    result = Whatsapp::EditMessageService.new(
+      communication: @communication,
+      text: params[:body]
+    ).call
+
+    if result[:success]
+      respond_to do |format|
+        format.html { redirect_back_with_notice('Message edited successfully') }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "communication_#{@communication.id}",
+            partial: "communications/message",
+            locals: { communication: @communication }
+          )
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back_with_alert("Failed to edit message: #{result[:error]}") }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash",
+            partial: "shared/flash",
+            locals: { alert: "Failed to edit message: #{result[:error]}" }
+          )
+        end
+      end
+    end
+  end
+
+  def delete_message
+    result = Whatsapp::DeleteMessageService.new(
+      communication: @communication
+    ).call
+
+    if result[:success]
+      respond_to do |format|
+        format.html { redirect_back_with_notice('Message deleted successfully') }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "communication_#{@communication.id}",
+            partial: "communications/deleted_message",
+            locals: { communication: @communication }
+          )
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_back_with_alert("Failed to delete message: #{result[:error]}") }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash",
+            partial: "shared/flash",
+            locals: { alert: "Failed to delete message: #{result[:error]}" }
+          )
+        end
+      end
+    end
+  end
 
   def set_client
     # Client can be set from lead, booking, or directly
