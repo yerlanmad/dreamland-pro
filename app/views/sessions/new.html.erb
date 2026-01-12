@@ -8,18 +8,18 @@
             <span class="text-white font-bold text-2xl">D</span>
           </div>
           <h2 class="text-3xl font-bold text-gray-900">
-            Dreamland PRO
+            <%= t('auth.sign_in_page.title') %>
           </h2>
         </div>
         <p class="mt-6 text-base text-gray-600">
-          Welcome back! Please sign in to your account to continue.
+          <%= t('auth.sign_in_page.welcome') %> <%= t('auth.sign_in_page.subtitle') %>
         </p>
       </div>
 
       <div class="mt-8">
         <%= form_with url: login_path, method: :post, local: true, class: "space-y-6" do |form| %>
           <div>
-            <%= label_tag :email, "Email address", class: "block text-sm font-medium text-gray-700" %>
+            <%= label_tag :email, t('auth.sign_in_page.email_label'), class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1 relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,12 +31,12 @@
                   autocomplete: "email",
                   required: true,
                   class: "block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200 sm:text-sm",
-                  placeholder: "you@example.com" %>
+                  placeholder: t('auth.sign_in_page.email_placeholder') %>
             </div>
           </div>
 
           <div>
-            <%= label_tag :password, "Password", class: "block text-sm font-medium text-gray-700" %>
+            <%= label_tag :password, t('auth.sign_in_page.password_label'), class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1 relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,28 +47,28 @@
                   autocomplete: "current-password",
                   required: true,
                   class: "block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200 sm:text-sm",
-                  placeholder: "••••••••" %>
+                  placeholder: t('auth.sign_in_page.password_placeholder') %>
             </div>
           </div>
 
           <div>
-            <%= submit_tag "Sign in", class: "w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200" %>
+            <%= submit_tag t('auth.sign_in_page.sign_in_button'), class: "w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200" %>
           </div>
 
           <div class="flex items-center justify-between">
             <div class="text-sm">
-              <%= link_to "Create new account →", signup_path, class: "font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-200" %>
+              <%= link_to t('auth.sign_in_page.create_account_link'), signup_path, class: "font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-200" %>
             </div>
           </div>
         <% end %>
 
         <!-- Demo Credentials -->
         <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <p class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">Demo Credentials</p>
+          <p class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2"><%= t('auth.sign_in_page.demo_credentials') %></p>
           <div class="space-y-1 text-xs text-gray-600">
-            <p><span class="font-medium">Admin:</span> admin@dreamland.pro / password123</p>
-            <p><span class="font-medium">Manager:</span> manager@dreamland.pro / password123</p>
-            <p><span class="font-medium">Agent:</span> agent@dreamland.pro / password123</p>
+            <p><span class="font-medium"><%= t('auth.sign_in_page.demo_admin') %></span> admin@dreamland.pro / password123</p>
+            <p><span class="font-medium"><%= t('auth.sign_in_page.demo_manager') %></span> manager@dreamland.pro / password123</p>
+            <p><span class="font-medium"><%= t('auth.sign_in_page.demo_agent') %></span> agent@dreamland.pro / password123</p>
           </div>
         </div>
       </div>
@@ -81,10 +81,10 @@
       <div class="absolute inset-0 bg-black opacity-20"></div>
       <div class="relative h-full flex flex-col justify-center px-12 text-white">
         <h1 class="text-4xl font-bold mb-4">
-          Manage your travel business with ease
+          <%= t('auth.sign_in_page.branding.title') %>
         </h1>
         <p class="text-lg text-indigo-100 mb-8">
-          Track leads, manage tours, handle bookings, and communicate with customers all in one powerful CRM platform.
+          <%= t('auth.sign_in_page.branding.subtitle') %>
         </p>
         <div class="space-y-4">
           <div class="flex items-start">
@@ -93,7 +93,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <p class="ml-3">Lead management and tracking</p>
+            <p class="ml-3"><%= t('auth.sign_in_page.branding.feature_1') %></p>
           </div>
           <div class="flex items-start">
             <div class="flex-shrink-0">
@@ -101,7 +101,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <p class="ml-3">WhatsApp integration for seamless communication</p>
+            <p class="ml-3"><%= t('auth.sign_in_page.branding.feature_2') %></p>
           </div>
           <div class="flex items-start">
             <div class="flex-shrink-0">
@@ -109,7 +109,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <p class="ml-3">Tour and booking management</p>
+            <p class="ml-3"><%= t('auth.sign_in_page.branding.feature_3') %></p>
           </div>
           <div class="flex items-start">
             <div class="flex-shrink-0">
@@ -117,7 +117,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <p class="ml-3">Multi-language and multi-currency support</p>
+            <p class="ml-3"><%= t('auth.sign_in_page.branding.feature_4') %></p>
           </div>
         </div>
       </div>

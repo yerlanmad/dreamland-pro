@@ -259,6 +259,31 @@ ru:
       en: "Английский"
       ru: "Русский"
 
+    form:
+      errors:
+        one: "%{count} ошибка не позволила сохранить этого клиента:"
+        few: "%{count} ошибки не позволили сохранить этого клиента:"
+        many: "%{count} ошибок не позволили сохранить этого клиента:"
+        other: "%{count} ошибок не позволили сохранить этого клиента:"
+      contact_information: "Контактная информация"
+      contact_subtitle: "Основные данные для идентификации клиента"
+      name_placeholder: "Полное имя"
+      name_help: "Полное имя клиента"
+      phone_placeholder: "+1234567890"
+      phone_help: "Включите код страны (например, +1, +7, +77)"
+      email_optional: "Email (необязательно)"
+      email_placeholder: "email@example.com"
+      email_help: "Необязательно"
+      preferred_language_label: "Предпочитаемый язык"
+      language_prompt: "Выберите язык..."
+      language_help: "Для коммуникаций и шаблонов"
+      internal_notes: "Внутренние заметки"
+      notes_subtitle: "Дополнительная информация о клиенте"
+      notes_placeholder: "Добавьте любые заметки о клиенте..."
+      notes_help: "Внутренние заметки (не видны клиенту)"
+      create_client: "Создать клиента"
+      update_client: "Обновить клиента"
+
   # Bookings
   bookings:
     title: "Бронирования"
@@ -276,6 +301,7 @@ ru:
       tour_departure: "Отправление тура"
       status: "Статус"
       number_of_travelers: "Количество туристов"
+      num_participants: "Количество участников"
       total_amount: "Общая сумма"
       deposit_amount: "Сумма депозита"
       currency: "Валюта"
@@ -288,6 +314,32 @@ ru:
       paid: "Оплачено"
       cancelled: "Отменено"
       completed: "Завершено"
+
+    form:
+      errors:
+        one: "%{count} ошибка не позволила сохранить это бронирование:"
+        few: "%{count} ошибки не позволили сохранить это бронирование:"
+        many: "%{count} ошибок не позволили сохранить это бронирование:"
+        other: "%{count} ошибок не позволили сохранить это бронирование:"
+      select_client_prompt: "Выберите клиента..."
+      select_tour_departure_prompt: "Выберите отправление тура..."
+      view_client: "Просмотреть клиента"
+      participants_label: "Количество участников"
+      participants_placeholder: "Введите количество участников"
+      participants_help: "Количество человек, участвующих в туре"
+      total_amount_help: "Общая сумма бронирования"
+      total_amount_placeholder: "0.00"
+      select_tour_help: "Выберите тур с доступной датой отправления"
+      spots_left: "мест осталось"
+      status_help: "Текущий статус бронирования"
+      associated_with_lead: "Это бронирование будет связано с"
+      create_booking: "Создать бронирование"
+      update_booking: "Обновить бронирование"
+      currencies:
+        usd: "Доллар США (USD)"
+        kzt: "Казахстанский тенге (KZT)"
+        eur: "Евро (EUR)"
+        rub: "Российский рубль (RUB)"
 
   # Tours
   tours:
@@ -418,6 +470,23 @@ ru:
       completed: "Завершено"
       cancelled: "Отменено"
 
+    form:
+      tour_information: "Информация о туре"
+      tour_label: "Тур:"
+      base_price_label: "Базовая цена:"
+      default_capacity_label: "Стандартная вместимость:"
+      spots: "мест"
+      info_message: "Цена, валюта и вместимость предварительно заполнены из настроек тура, но вы можете скорректировать их для этого конкретного отправления при необходимости."
+      departure_details: "Детали отправления"
+      departure_date_label: "Дата отправления"
+      price_label: "Цена"
+      currency_label: "Валюта"
+      capacity_label: "Вместимость"
+      capacity_suffix: "мест"
+      cancel: "Отмена"
+      create_departure: "Создать отправление"
+      update_departure: "Обновить отправление"
+
   # Payments
   payments:
     title: "Платежи"
@@ -457,6 +526,38 @@ ru:
       completed: "Завершен"
       failed: "Не удался"
       refunded: "Возвращен"
+
+    form:
+      errors:
+        one: "%{count} ошибка не позволила сохранить этот платеж:"
+        few: "%{count} ошибки не позволили сохранить этот платеж:"
+        many: "%{count} ошибок не позволили сохранить этот платеж:"
+        other: "%{count} ошибок не позволили сохранить этот платеж:"
+      payment_for: "Платеж для"
+      client_label: "Клиент:"
+      tour_label: "Тур:"
+      booking_total: "Итого по бронированию:"
+      already_paid: "Уже оплачено:"
+      outstanding: "К оплате:"
+      amount_label: "Сумма платежа"
+      amount_placeholder: "0.00"
+      outstanding_balance: "Остаток к оплате"
+      apply_full_balance: "Применить полный остаток"
+      currency_label: "Валюта"
+      booking_currency: "Валюта бронирования"
+      payment_date_label: "Дата платежа"
+      payment_date_help: "Дата получения платежа"
+      payment_method_label: "Метод оплаты"
+      payment_method_prompt: "Выберите метод оплаты..."
+      status_label: "Статус платежа"
+      status_help: "Текущий статус этого платежа"
+      create_payment: "Записать платеж"
+      update_payment: "Обновить платеж"
+      payment_methods:
+        cash: "Наличные"
+        bank_transfer: "Банковский перевод"
+        credit_card: "Кредитная карта"
+        online: "Онлайн платеж"
 
   # Communications
   communications:
@@ -517,7 +618,36 @@ ru:
       booking_confirmation: "Подтверждение бронирования"
       payment_reminder: "Напоминание об оплате"
       general: "Общее"
+      pricing: "Цены"
+      availability: "Доступность"
+      confirmation: "Подтверждение"
 
+    form:
+      errors:
+        one: "%{count} ошибка не позволила сохранить этот шаблон:"
+        few: "%{count} ошибки не позволили сохранить этот шаблон:"
+        many: "%{count} ошибок не позволили сохранить этот шаблон:"
+        other: "%{count} ошибок не позволили сохранить этот шаблон:"
+      template_information: "Информация о шаблоне"
+      template_subtitle: "Создайте многоразовые шаблоны сообщений с заменой переменных"
+      name_label: "Название шаблона"
+      name_placeholder: "например, 'Приветствие для новых лидов'"
+      category_label: "Категория"
+      content_label: "Содержимое сообщения"
+      content_placeholder: "Здравствуйте {{name}}, спасибо за ваш запрос о {{tour_name}}..."
+      content_help: "Используйте двойные фигурные скобки для переменных:"
+      variable_example: "{{имя_переменной}}"
+      available_variables: "Доступные переменные"
+      var_name: "- {{name}} — Имя клиента"
+      var_phone: "- {{phone}} — Номер телефона клиента"
+      var_email: "- {{email}} — Email клиента"
+      var_tour_name: "- {{tour_name}} — Название тура (если доступен контекст)"
+      active_label: "Активный (доступен для использования)"
+      cancel: "Отмена"
+      create_template: "Создать шаблон"
+      update_template: "Обновить шаблон"
+
+  # Authentication
   # Authentication
   auth:
     sign_in: "Войти"
@@ -531,6 +661,63 @@ ru:
     sign_in_with: "Войти с помощью"
     dont_have_account: "Нет аккаунта?"
     already_have_account: "Уже есть аккаунт?"
+
+    # Sign in page
+    sign_in_page:
+      title: "Dreamland PRO"
+      welcome: "Добро пожаловать!"
+      subtitle: "Пожалуйста, войдите в свою учетную запись, чтобы продолжить."
+      email_label: "Email адрес"
+      email_placeholder: "you@example.com"
+      password_label: "Пароль"
+      password_placeholder: "••••••••"
+      sign_in_button: "Войти"
+      create_account_link: "Создать новый аккаунт →"
+      demo_credentials: "Демо учетные данные"
+      demo_admin: "Администратор:"
+      demo_manager: "Менеджер:"
+      demo_agent: "Агент:"
+      branding:
+        title: "Управляйте своим туристическим бизнесом с легкостью"
+        subtitle: "Отслеживайте лиды, управляйте турами, обрабатывайте бронирования и общайтесь с клиентами на одной мощной CRM-платформе."
+        feature_1: "Управление и отслеживание лидов"
+        feature_2: "Интеграция с WhatsApp для бесшовной коммуникации"
+        feature_3: "Управление турами и бронированиями"
+        feature_4: "Поддержка нескольких языков и валют"
+
+    # Sign up page
+    sign_up_page:
+      title: "Создайте свой аккаунт"
+      subtitle: "Присоединяйтесь к Dreamland PRO CRM"
+      name_label: "Имя"
+      name_placeholder: "Полное имя"
+      email_label: "Email"
+      email_placeholder: "Email адрес"
+      password_label: "Пароль"
+      password_placeholder: "Пароль (минимум 6 символов)"
+      password_confirmation_label: "Подтверждение пароля"
+      password_confirmation_placeholder: "Подтвердите пароль"
+      role_label: "Роль"
+      preferred_language_label: "Предпочитаемый язык"
+      preferred_currency_label: "Предпочитаемая валюта"
+      create_button: "Создать аккаунт"
+      sign_in_link: "Уже есть аккаунт? Войти"
+      errors:
+        one: "%{count} ошибка не позволила сохранить этого пользователя:"
+        few: "%{count} ошибки не позволили сохранить этого пользователя:"
+        many: "%{count} ошибок не позволили сохранить этого пользователя:"
+        other: "%{count} ошибок не позволили сохранить этого пользователя:"
+
+    # Roles
+    roles:
+      admin: "Администратор"
+      manager: "Менеджер"
+      agent: "Агент"
+
+    # Languages
+    languages:
+      en: "English"
+      ru: "Русский"
 
   # Flash messages
   flash:

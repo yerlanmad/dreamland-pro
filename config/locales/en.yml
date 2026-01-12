@@ -258,6 +258,25 @@ en:
       ru: "Russian"
 
     form:
+      errors:
+        one: "%{count} error prohibited this client from being saved:"
+        other: "%{count} errors prohibited this client from being saved:"
+      contact_information: "Contact Information"
+      contact_subtitle: "Basic details for client identification"
+      name_placeholder: "Full name"
+      name_help: "Client's full name"
+      phone_placeholder: "+1234567890"
+      phone_help: "Include country code (e.g., +1, +7, +77)"
+      email_optional: "Email (Optional)"
+      email_placeholder: "email@example.com"
+      email_help: "Optional"
+      preferred_language_label: "Preferred Language"
+      language_prompt: "Select language..."
+      language_help: "For communications and templates"
+      internal_notes: "Internal Notes"
+      notes_subtitle: "Additional information about this client"
+      notes_placeholder: "Add any notes about this client..."
+      notes_help: "Internal notes (not visible to client)"
       create_client: "Create Client"
       update_client: "Update Client"
 
@@ -278,6 +297,7 @@ en:
       tour_departure: "Tour Departure"
       status: "Status"
       number_of_travelers: "Number of Travelers"
+      num_participants: "Number of Participants"
       total_amount: "Total Amount"
       deposit_amount: "Deposit Amount"
       currency: "Currency"
@@ -291,6 +311,30 @@ en:
       paid: "Paid"
       cancelled: "Cancelled"
       completed: "Completed"
+
+    form:
+      errors:
+        one: "%{count} error prohibited this booking from being saved:"
+        other: "%{count} errors prohibited this booking from being saved:"
+      select_client_prompt: "Select a client..."
+      select_tour_departure_prompt: "Select a tour departure..."
+      view_client: "View Client"
+      participants_label: "Number of Participants"
+      participants_placeholder: "Enter number of participants"
+      participants_help: "Number of people participating in the tour"
+      total_amount_help: "Total booking amount"
+      total_amount_placeholder: "0.00"
+      select_tour_help: "Select a tour with an available departure date"
+      spots_left: "spots left"
+      status_help: "Current status of the booking"
+      associated_with_lead: "This booking will be associated with"
+      create_booking: "Create Booking"
+      update_booking: "Update Booking"
+      currencies:
+        usd: "US Dollar (USD)"
+        kzt: "Kazakh Tenge (KZT)"
+        eur: "Euro (EUR)"
+        rub: "Russian Ruble (RUB)"
 
   # Tours
   tours:
@@ -419,6 +463,23 @@ en:
       completed: "Completed"
       cancelled: "Cancelled"
 
+    form:
+      tour_information: "Tour Information"
+      tour_label: "Tour:"
+      base_price_label: "Base Price:"
+      default_capacity_label: "Default Capacity:"
+      spots: "spots"
+      info_message: "Price, currency, and capacity are pre-filled from the tour settings, but you can adjust them for this specific departure if needed."
+      departure_details: "Departure Details"
+      departure_date_label: "Departure Date"
+      price_label: "Price"
+      currency_label: "Currency"
+      capacity_label: "Capacity"
+      capacity_suffix: "spots"
+      cancel: "Cancel"
+      create_departure: "Create Departure"
+      update_departure: "Update Departure"
+
   # Payments
   payments:
     title: "Payments"
@@ -458,6 +519,36 @@ en:
       completed: "Completed"
       failed: "Failed"
       refunded: "Refunded"
+
+    form:
+      errors:
+        one: "%{count} error prohibited this payment from being saved:"
+        other: "%{count} errors prohibited this payment from being saved:"
+      payment_for: "Payment for"
+      client_label: "Client:"
+      tour_label: "Tour:"
+      booking_total: "Booking Total:"
+      already_paid: "Already Paid:"
+      outstanding: "Outstanding:"
+      amount_label: "Payment Amount"
+      amount_placeholder: "0.00"
+      outstanding_balance: "Outstanding balance"
+      apply_full_balance: "Apply full balance"
+      currency_label: "Currency"
+      booking_currency: "Booking currency"
+      payment_date_label: "Payment Date"
+      payment_date_help: "Date when payment was received"
+      payment_method_label: "Payment Method"
+      payment_method_prompt: "Select payment method..."
+      status_label: "Payment Status"
+      status_help: "Current status of this payment"
+      create_payment: "Record Payment"
+      update_payment: "Update Payment"
+      payment_methods:
+        cash: "Cash"
+        bank_transfer: "Bank Transfer"
+        credit_card: "Credit Card"
+        online: "Online Payment"
 
   # Communications
   communications:
@@ -519,6 +610,34 @@ en:
       payment_reminder: "Payment Reminder"
       general: "General"
 
+      pricing: "Pricing"
+      availability: "Availability"
+      confirmation: "Confirmation"
+
+    form:
+      errors:
+        one: "%{count} error prohibited this template from being saved:"
+        other: "%{count} errors prohibited this template from being saved:"
+      template_information: "Template Information"
+      template_subtitle: "Create reusable message templates with variable substitution"
+      name_label: "Template Name"
+      name_placeholder: "e.g., 'Greeting for new leads'"
+      category_label: "Category"
+      content_label: "Message Content"
+      content_placeholder: "Hello {{name}}, thank you for your inquiry about {{tour_name}}..."
+      content_help: "Use double curly braces for variables:"
+      variable_example: "{{variable_name}}"
+      available_variables: "Available Variables"
+      var_name: "- {{name}} - Client name"
+      var_phone: "- {{phone}} - Client phone number"
+      var_email: "- {{email}} - Client email"
+      var_tour_name: "- {{tour_name}} - Tour name (if context available)"
+      active_label: "Active (available for use)"
+      cancel: "Cancel"
+      create_template: "Create Template"
+      update_template: "Update Template"
+
+  # Authentication
   # Authentication
   auth:
     sign_in: "Sign In"
@@ -532,6 +651,61 @@ en:
     sign_in_with: "Sign in with"
     dont_have_account: "Don't have an account?"
     already_have_account: "Already have an account?"
+
+    # Sign in page
+    sign_in_page:
+      title: "Dreamland PRO"
+      welcome: "Welcome back!"
+      subtitle: "Please sign in to your account to continue."
+      email_label: "Email address"
+      email_placeholder: "you@example.com"
+      password_label: "Password"
+      password_placeholder: "••••••••"
+      sign_in_button: "Sign in"
+      create_account_link: "Create new account →"
+      demo_credentials: "Demo Credentials"
+      demo_admin: "Admin:"
+      demo_manager: "Manager:"
+      demo_agent: "Agent:"
+      branding:
+        title: "Manage your travel business with ease"
+        subtitle: "Track leads, manage tours, handle bookings, and communicate with customers all in one powerful CRM platform."
+        feature_1: "Lead management and tracking"
+        feature_2: "WhatsApp integration for seamless communication"
+        feature_3: "Tour and booking management"
+        feature_4: "Multi-language and multi-currency support"
+
+    # Sign up page
+    sign_up_page:
+      title: "Create your account"
+      subtitle: "Join Dreamland PRO CRM"
+      name_label: "Name"
+      name_placeholder: "Full name"
+      email_label: "Email"
+      email_placeholder: "Email address"
+      password_label: "Password"
+      password_placeholder: "Password (min 6 characters)"
+      password_confirmation_label: "Password Confirmation"
+      password_confirmation_placeholder: "Confirm password"
+      role_label: "Role"
+      preferred_language_label: "Preferred Language"
+      preferred_currency_label: "Preferred Currency"
+      create_button: "Create account"
+      sign_in_link: "Already have an account? Sign in"
+      errors:
+        one: "%{count} error prohibited this user from being saved:"
+        other: "%{count} errors prohibited this user from being saved:"
+
+    # Roles
+    roles:
+      admin: "Admin"
+      manager: "Manager"
+      agent: "Agent"
+
+    # Languages
+    languages:
+      en: "English"
+      ru: "Русский"
 
   # Flash messages
   flash:

@@ -2,10 +2,10 @@
   <div class="max-w-md w-full space-y-8">
     <div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Create your account
+        <%= t('auth.sign_up_page.title') %>
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
-        Join Dreamland PRO CRM
+        <%= t('auth.sign_up_page.subtitle') %>
       </p>
     </div>
 
@@ -15,7 +15,7 @@
           <div class="flex">
             <div class="ml-3">
               <h3 class="text-sm font-medium text-red-800">
-                <%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:
+                <%= t('auth.sign_up_page.errors', count: @user.errors.count) %>
               </h3>
               <div class="mt-2 text-sm text-red-700">
                 <ul class="list-disc pl-5 space-y-1">
@@ -31,59 +31,59 @@
 
       <div class="rounded-md shadow-sm space-y-4">
         <div>
-          <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :name, t('auth.sign_up_page.name_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.text_field :name,
               autofocus: true,
               required: true,
               class: "mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "Full name" %>
+              placeholder: t('auth.sign_up_page.name_placeholder') %>
         </div>
 
         <div>
-          <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :email, t('auth.sign_up_page.email_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.email_field :email,
               autocomplete: "email",
               required: true,
               class: "mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "Email address" %>
+              placeholder: t('auth.sign_up_page.email_placeholder') %>
         </div>
 
         <div>
-          <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :password, t('auth.sign_up_page.password_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.password_field :password,
               autocomplete: "new-password",
               required: true,
               class: "mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "Password (min 6 characters)" %>
+              placeholder: t('auth.sign_up_page.password_placeholder') %>
         </div>
 
         <div>
-          <%= form.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :password_confirmation, t('auth.sign_up_page.password_confirmation_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.password_field :password_confirmation,
               autocomplete: "new-password",
               required: true,
               class: "mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "Confirm password" %>
+              placeholder: t('auth.sign_up_page.password_confirmation_placeholder') %>
         </div>
 
         <div>
-          <%= form.label :role, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :role, t('auth.sign_up_page.role_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.select :role,
-              User.roles.keys.map { |role| [role.titleize, role] },
+              User.roles.keys.map { |role| [t("auth.roles.#{role}"), role] },
               { selected: 'agent' },
               class: "mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         </div>
 
         <div>
-          <%= form.label :preferred_language, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :preferred_language, t('auth.sign_up_page.preferred_language_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.select :preferred_language,
-              [['English', 'en'], ['Русский', 'ru']],
+              [[t('auth.languages.en'), 'en'], [t('auth.languages.ru'), 'ru']],
               { selected: 'ru' },
               class: "mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         </div>
 
         <div>
-          <%= form.label :preferred_currency, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :preferred_currency, t('auth.sign_up_page.preferred_currency_label'), class: "block text-sm font-medium text-gray-700" %>
           <%= form.select :preferred_currency,
               User.preferred_currencies.keys,
               { selected: 'KZT' },
@@ -92,12 +92,12 @@
       </div>
 
       <div>
-        <%= form.submit "Create account", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        <%= form.submit t('auth.sign_up_page.create_button'), class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
       </div>
 
       <div class="flex items-center justify-between">
         <div class="text-sm">
-          <%= link_to "Already have an account? Sign in", login_path, class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+          <%= link_to t('auth.sign_up_page.sign_in_link'), login_path, class: "font-medium text-indigo-600 hover:text-indigo-500" %>
         </div>
       </div>
     <% end %>

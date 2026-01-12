@@ -10,7 +10,7 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:
+            <%= t('bookings.form.errors', count: booking.errors.count) %>
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc list-inside space-y-1">
@@ -41,7 +41,7 @@
               <p class="text-sm font-medium text-gray-900"><%= booking.client.name %></p>
               <p class="text-xs text-gray-500"><%= booking.client.phone %></p>
             </div>
-            <%= link_to "View Client", booking.client, class: "ml-auto text-xs text-indigo-600 hover:text-indigo-700", target: "_blank" %>
+            <%= link_to t('bookings.form.view_client'), booking.client, class: "ml-auto text-xs text-indigo-600 hover:text-indigo-700", target: "_blank" %>
           </div>
           <%= f.hidden_field :client_id %>
         <% elsif defined?(@client) && @client.present? %>
@@ -64,7 +64,7 @@
             Client.order(:name),
             :id,
             ->(c) { "#{c.name} (#{c.phone})" },
-            { prompt: "Select a client..." },
+            { prompt: t('bookings.form.select_client_prompt') },
             class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         <% end %>
       </div>
@@ -75,26 +75,26 @@
         <%= f.collection_select :tour_departure_id,
           @available_departures || TourDeparture.upcoming,
           :id,
-          ->(td) { "#{td.tour.name} - #{td.departure_date.strftime('%b %d, %Y')} (#{td.available_spots} spots left) - #{number_to_currency(td.price, unit: td.currency, precision: 0)}" },
-          { prompt: "Select a tour departure..." },
+          ->(td) { "#{td.tour.name} - #{td.departure_date.strftime('%b %d, %Y')} (#{td.available_spots} #{t('bookings.form.spots_left')}) - #{number_to_currency(td.price, unit: td.currency, precision: 0)}" },
+          { prompt: t('bookings.form.select_tour_departure_prompt') },
           {
             class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
             data: { controller: "tour-selector" }
           } %>
         <p class="mt-1 text-xs text-gray-500">
-          Select a tour with an available departure date
+          <%= t('bookings.form.select_tour_help') %>
         </p>
       </div>
 
       <!-- Number of Participants -->
       <div>
-        <%= f.label :num_participants, "Number of Participants", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :num_participants, t('bookings.form.participants_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.number_field :num_participants,
           min: 1,
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-          placeholder: "Enter number of participants" %>
+          placeholder: t('bookings.form.participants_placeholder') %>
         <p class="mt-1 text-xs text-gray-500">
-          Number of people participating in the tour
+          <%= t('bookings.form.participants_help') %>
         </p>
       </div>
 
@@ -106,9 +106,9 @@
             step: 0.01,
             min: 0,
             class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-            placeholder: "0.00" %>
+            placeholder: t('bookings.form.total_amount_placeholder') %>
           <p class="mt-1 text-xs text-gray-500">
-            Total booking amount
+            <%= t('bookings.form.total_amount_help') %>
           </p>
         </div>
 
@@ -116,10 +116,10 @@
           <%= f.label :currency, t('bookings.attributes.currency'), class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= f.select :currency,
             options_for_select([
-              ['US Dollar (USD)', 'USD'],
-              ['Kazakh Tenge (KZT)', 'KZT'],
-              ['Euro (EUR)', 'EUR'],
-              ['Russian Ruble (RUB)', 'RUB']
+              [t('bookings.form.currencies.usd'), 'USD'],
+              [t('bookings.form.currencies.kzt'), 'KZT'],
+              [t('bookings.form.currencies.eur'), 'EUR'],
+              [t('bookings.form.currencies.rub'), 'RUB']
             ], booking.currency || 'USD'),
             {},
             class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
@@ -131,15 +131,15 @@
         <%= f.label :status, t('bookings.attributes.status'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :status,
           options_for_select([
-            ['Confirmed', 'confirmed'],
-            ['Paid', 'paid'],
-            ['Completed', 'completed'],
-            ['Cancelled', 'cancelled']
+            [t('bookings.statuses.confirmed'), 'confirmed'],
+            [t('bookings.statuses.paid'), 'paid'],
+            [t('bookings.statuses.completed'), 'completed'],
+            [t('bookings.statuses.cancelled'), 'cancelled']
           ], booking.status || 'confirmed'),
           {},
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         <p class="mt-1 text-xs text-gray-500">
-          Current status of the booking
+          <%= t('bookings.form.status_help') %>
         </p>
       </div>
 
@@ -154,7 +154,7 @@
               </svg>
             </div>
             <div class="ml-3 text-sm text-blue-700">
-              <p>This booking will be associated with <%= link_to "Lead ##{@lead.id}", @lead, class: "font-medium underline", target: "_blank" %></p>
+              <p><%= t('bookings.form.associated_with_lead') %> <%= link_to "Lead ##{@lead.id}", @lead, class: "font-medium underline", target: "_blank" %></p>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@
     <!-- Form Actions -->
     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
       <%= link_to t('common.cancel'), bookings_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      <%= f.submit booking.persisted? ? "Update Booking" : "Create Booking",
+      <%= f.submit booking.persisted? ? t('bookings.form.update_booking') : t('bookings.form.create_booking'),
         class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
     </div>
   </div>
