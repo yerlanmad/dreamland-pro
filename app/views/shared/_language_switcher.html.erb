@@ -1,0 +1,57 @@
+<div class="relative inline-block text-left">
+  <div>
+    <button type="button"
+            onclick="toggleLanguageMenu(event)"
+            id="language-menu-button"
+            class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+      </svg>
+      <%= I18n.locale == :ru ? "RU" : "EN" %>
+      <svg class="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+  </div>
+
+  <div id="language-menu"
+       class="hidden origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+    <div class="py-1" role="menu">
+      <%= link_to url_for(locale: :ru),
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 #{I18n.locale == :ru ? 'bg-gray-50 font-medium' : ''}",
+                  role: "menuitem" do %>
+        <div class="flex items-center">
+          <span class="mr-2">🇷🇺</span>
+          Русский
+        </div>
+      <% end %>
+
+      <%= link_to url_for(locale: :en),
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 #{I18n.locale == :en ? 'bg-gray-50 font-medium' : ''}",
+                  role: "menuitem" do %>
+        <div class="flex items-center">
+          <span class="mr-2">🇬🇧</span>
+          English
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLanguageMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('language-menu');
+    menu.classList.toggle('hidden');
+  }
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    const menu = document.getElementById('language-menu');
+    const button = document.getElementById('language-menu-button');
+
+    if (menu && !menu.contains(event.target) && !button.contains(event.target)) {
+      menu.classList.add('hidden');
+    }
+  });
+</script>

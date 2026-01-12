@@ -16,11 +16,18 @@ class ApplicationController < ActionController::Base
   private
 
   def set_locale
-    # Priority: URL param > User preference > Browser > Default (Russian)
-    I18n.locale = extract_locale || current_user&.preferred_language || extract_locale_from_accept_language_header || I18n.default_locale
+    # Priority: URL param > Session > User preference > Browser > Default (Russian)
+    locale = extract_locale_from_params ||
+             session[:locale] ||
+             current_user&.preferred_language ||
+             extract_locale_from_accept_language_header ||
+             I18n.default_locale
+
+    I18n.locale = locale
+    session[:locale] = locale if params[:locale].present?
   end
 
-  def extract_locale
+  def extract_locale_from_params
     parsed_locale = params[:locale]
     I18n.available_locales.map(&:to_s).include?(parsed_locale) ? parsed_locale : nil
   end
@@ -32,7 +39,8 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
-    { locale: I18n.locale }
+    # Only add locale to URLs if it's not the default (Russian)
+    I18n.locale == I18n.default_locale ? {} : { locale: I18n.locale }
   end
 
   def current_user
