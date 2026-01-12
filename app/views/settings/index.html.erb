@@ -2,9 +2,9 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
+      <h1 class="text-3xl font-bold text-gray-900"><%= t('settings.title') %></h1>
       <p class="mt-2 text-sm text-gray-700">
-        Manage your CRM settings, integrations, and preferences.
+        <%= t('settings.subtitle') %>
       </p>
     </div>
 
@@ -23,10 +23,10 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900 group-hover:text-indigo-600">
-                WhatsApp Channels
+                <%= t('settings.whatsapp.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                Manage connected WhatsApp channels via wazzup24
+                <%= t('settings.whatsapp.description') %>
               </p>
             </div>
             <div class="ml-4">
@@ -51,10 +51,10 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900 group-hover:text-indigo-600">
-                Message Templates
+                <%= t('settings.templates.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                Create and manage WhatsApp message templates
+                <%= t('settings.templates.description') %>
               </p>
             </div>
             <div class="ml-4">
@@ -79,15 +79,15 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900">
-                User Management
+                <%= t('settings.users.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                Manage agents and permissions (Coming soon)
+                <%= t('settings.users.description') %> (<%= t('settings.users.coming_soon') %>)
               </p>
             </div>
             <div class="ml-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                Soon
+                <%= t('settings.users.coming_soon') %>
               </span>
             </div>
           </div>
@@ -107,15 +107,15 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900">
-                Notifications
+                <%= t('settings.notifications.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                Configure notification preferences (Coming soon)
+                <%= t('settings.notifications.description') %> (<%= t('settings.notifications.coming_soon') %>)
               </p>
             </div>
             <div class="ml-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                Soon
+                <%= t('settings.notifications.coming_soon') %>
               </span>
             </div>
           </div>
@@ -136,15 +136,15 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900">
-                System Settings
+                <%= t('settings.system.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                General system configuration (Coming soon)
+                <%= t('settings.system.description') %> (<%= t('settings.system.coming_soon') %>)
               </p>
             </div>
             <div class="ml-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                Soon
+                <%= t('settings.system.coming_soon') %>
               </span>
             </div>
           </div>
@@ -164,15 +164,15 @@
             </div>
             <div class="ml-4 flex-1">
               <h3 class="text-lg font-medium text-gray-900">
-                API & Integrations
+                <%= t('settings.api.title') %>
               </h3>
               <p class="mt-1 text-sm text-gray-500">
-                Manage API keys and third-party integrations (Coming soon)
+                <%= t('settings.api.description') %> (<%= t('settings.api.coming_soon') %>)
               </p>
             </div>
             <div class="ml-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                Soon
+                <%= t('settings.api.coming_soon') %>
               </span>
             </div>
           </div>
@@ -182,7 +182,7 @@
 
     <!-- Back Button -->
     <div class="mt-8">
-      <%= link_to "← Back to Dashboard", dashboard_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+      <%= link_to "← #{t('settings.back_to_dashboard')}", dashboard_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
     </div>
   </div>
 </div>

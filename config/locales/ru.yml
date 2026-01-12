@@ -1,0 +1,414 @@
+ru:
+  hello: "Привет мир"
+
+  # Common
+  common:
+    back: "Назад"
+    save: "Сохранить"
+    cancel: "Отмена"
+    delete: "Удалить"
+    edit: "Редактировать"
+    create: "Создать"
+    update: "Обновить"
+    search: "Поиск"
+    filter: "Фильтр"
+    actions: "Действия"
+    loading: "Загрузка..."
+    no_data: "Нет данных"
+    confirm_delete: "Вы уверены, что хотите удалить?"
+    success: "Успешно"
+    error: "Ошибка"
+    view: "Просмотр"
+    new: "Новый"
+    show: "Показать"
+    all: "Все"
+
+  # Navigation
+  navigation:
+    dashboard: "Панель управления"
+    leads: "Лиды"
+    clients: "Клиенты"
+    bookings: "Бронирования"
+    tours: "Туры"
+    payments: "Платежи"
+    settings: "Настройки"
+    logout: "Выйти"
+    sign_in: "Войти"
+    sign_up: "Зарегистрироваться"
+
+  # Dashboard
+  dashboard:
+    title: "Панель управления"
+    welcome: "Добро пожаловать в Dreamland PRO"
+    overview: "Обзор"
+    recent_activity: "Последняя активность"
+    statistics: "Статистика"
+
+  # Settings
+  settings:
+    title: "Настройки"
+    subtitle: "Управляйте настройками CRM, интеграциями и предпочтениями"
+    back_to_dashboard: "← Назад к панели управления"
+
+    whatsapp:
+      title: "WhatsApp каналы"
+      description: "Управление подключенными WhatsApp каналами через wazzup24"
+      channels_title: "WhatsApp каналы"
+      channels_subtitle: "Управление каналами WhatsApp, подключенными через wazzup24 API"
+      refresh_channels: "Обновить каналы"
+      channel_id: "ID канала"
+      transport: "Тип"
+      phone_number: "Номер телефона"
+      status: "Статус"
+      default_channel: "Канал по умолчанию"
+      active: "Активный"
+      inactive: "Неактивный"
+      no_channels: "Каналы не найдены"
+      error_loading: "Ошибка при загрузке каналов"
+      active_channels: "Активные каналы"
+      total_channels: "Всего каналов"
+
+    templates:
+      title: "Шаблоны сообщений"
+      description: "Создание и управление шаблонами сообщений WhatsApp"
+
+    users:
+      title: "Управление пользователями"
+      description: "Управление агентами и правами доступа"
+      coming_soon: "Скоро"
+
+    notifications:
+      title: "Уведомления"
+      description: "Настройка предпочтений уведомлений"
+      coming_soon: "Скоро"
+
+    system:
+      title: "Системные настройки"
+      description: "Общая конфигурация системы"
+      coming_soon: "Скоро"
+
+    api:
+      title: "API и интеграции"
+      description: "Управление API ключами и интеграциями с третьими сторонами"
+      coming_soon: "Скоро"
+
+  # Leads
+  leads:
+    title: "Лиды"
+    new: "Новый лид"
+    edit: "Редактировать лид"
+    show: "Просмотр лида"
+    list: "Список лидов"
+    create_success: "Лид успешно создан"
+    update_success: "Лид успешно обновлен"
+    delete_success: "Лид успешно удален"
+
+    attributes:
+      name: "Имя"
+      phone: "Телефон"
+      email: "Email"
+      source: "Источник"
+      status: "Статус"
+      tour_interest: "Интересующий тур"
+      assigned_agent: "Назначенный агент"
+      notes: "Заметки"
+      unread_messages: "Непрочитанные сообщения"
+      last_message_at: "Последнее сообщение"
+
+    sources:
+      whatsapp: "WhatsApp"
+      website: "Веб-сайт"
+      referral: "Рекомендация"
+      phone: "Телефон"
+      email: "Email"
+      social_media: "Соц. сети"
+      other: "Другое"
+
+    statuses:
+      new: "Новый"
+      contacted: "Контактирован"
+      qualified: "Квалифицирован"
+      quoted: "Предложение"
+      won: "Выигран"
+      lost: "Потерян"
+
+  # Clients
+  clients:
+    title: "Клиенты"
+    new: "Новый клиент"
+    edit: "Редактировать клиента"
+    show: "Просмотр клиента"
+    list: "Список клиентов"
+    create_success: "Клиент успешно создан"
+    update_success: "Клиент успешно обновлен"
+    delete_success: "Клиент успешно удален"
+
+    attributes:
+      name: "Имя"
+      phone: "Телефон"
+      email: "Email"
+      preferred_language: "Предпочитаемый язык"
+      notes: "Заметки"
+      total_bookings: "Всего бронирований"
+      lifetime_revenue: "Общая выручка"
+      created_at: "Создан"
+
+    languages:
+      en: "Английский"
+      ru: "Русский"
+
+  # Bookings
+  bookings:
+    title: "Бронирования"
+    new: "Новое бронирование"
+    edit: "Редактировать бронирование"
+    show: "Просмотр бронирования"
+    list: "Список бронирований"
+    create_success: "Бронирование успешно создано"
+    update_success: "Бронирование успешно обновлено"
+    delete_success: "Бронирование успешно удалено"
+
+    attributes:
+      reference_number: "Номер брони"
+      client: "Клиент"
+      tour_departure: "Отправление тура"
+      status: "Статус"
+      number_of_travelers: "Количество туристов"
+      total_amount: "Общая сумма"
+      deposit_amount: "Сумма депозита"
+      currency: "Валюта"
+      booking_date: "Дата бронирования"
+      notes: "Заметки"
+
+    statuses:
+      pending: "В ожидании"
+      confirmed: "Подтверждено"
+      paid: "Оплачено"
+      cancelled: "Отменено"
+      completed: "Завершено"
+
+  # Tours
+  tours:
+    title: "Туры"
+    new: "Новый тур"
+    edit: "Редактировать тур"
+    show: "Просмотр тура"
+    list: "Список туров"
+    create_success: "Тур успешно создан"
+    update_success: "Тур успешно обновлен"
+    delete_success: "Тур успешно удален"
+
+    attributes:
+      name: "Название"
+      description: "Описание"
+      duration_days: "Длительность (дни)"
+      base_price: "Базовая цена"
+      currency: "Валюта"
+      category: "Категория"
+      destination: "Направление"
+      max_capacity: "Максимальная вместимость"
+      is_active: "Активный"
+
+  # Tour Departures
+  tour_departures:
+    title: "Отправления туров"
+    new: "Новое отправление"
+    edit: "Редактировать отправление"
+    show: "Просмотр отправления"
+    list: "Список отправлений"
+    create_success: "Отправление успешно создано"
+    update_success: "Отправление успешно обновлено"
+    delete_success: "Отправление успешно удалено"
+
+    attributes:
+      tour: "Тур"
+      departure_date: "Дата отправления"
+      return_date: "Дата возвращения"
+      available_slots: "Доступные места"
+      price: "Цена"
+      currency: "Валюта"
+      status: "Статус"
+
+    statuses:
+      scheduled: "Запланировано"
+      confirmed: "Подтверждено"
+      full: "Заполнено"
+      completed: "Завершено"
+      cancelled: "Отменено"
+
+  # Payments
+  payments:
+    title: "Платежи"
+    new: "Новый платеж"
+    edit: "Редактировать платеж"
+    show: "Просмотр платежа"
+    list: "Список платежей"
+    create_success: "Платеж успешно создан"
+    update_success: "Платеж успешно обновлен"
+    delete_success: "Платеж успешно удален"
+
+    attributes:
+      booking: "Бронирование"
+      amount: "Сумма"
+      currency: "Валюта"
+      payment_method: "Метод оплаты"
+      payment_type: "Тип платежа"
+      status: "Статус"
+      payment_date: "Дата платежа"
+      transaction_id: "ID транзакции"
+      notes: "Заметки"
+
+    payment_types:
+      deposit: "Депозит"
+      balance: "Остаток"
+      full_payment: "Полная оплата"
+      refund: "Возврат"
+
+    payment_methods:
+      cash: "Наличные"
+      card: "Карта"
+      bank_transfer: "Банковский перевод"
+      online: "Онлайн"
+
+    statuses:
+      pending: "В ожидании"
+      completed: "Завершен"
+      failed: "Не удался"
+      refunded: "Возвращен"
+
+  # Communications
+  communications:
+    title: "Коммуникации"
+    new_message: "Новое сообщение"
+    send: "Отправить"
+    reply: "Ответить"
+    edit_message: "Редактировать сообщение"
+    delete_message: "Удалить сообщение"
+    deleted: "Сообщение удалено"
+    media: "[Медиа]"
+
+    attributes:
+      communication_type: "Тип"
+      direction: "Направление"
+      body: "Текст"
+      sent_at: "Отправлено"
+      status: "Статус"
+
+    types:
+      whatsapp: "WhatsApp"
+      email: "Email"
+      phone: "Телефон"
+      sms: "SMS"
+
+    directions:
+      inbound: "Входящее"
+      outbound: "Исходящее"
+
+    statuses:
+      pending: "Ожидание"
+      sent: "Отправлено"
+      delivered: "Доставлено"
+      read: "Прочитано"
+      error: "Ошибка"
+
+  # WhatsApp Templates
+  whatsapp_templates:
+    title: "Шаблоны WhatsApp"
+    new: "Новый шаблон"
+    edit: "Редактировать шаблон"
+    show: "Просмотр шаблона"
+    list: "Список шаблонов"
+    create_success: "Шаблон успешно создан"
+    update_success: "Шаблон успешно обновлен"
+    delete_success: "Шаблон успешно удален"
+
+    attributes:
+      name: "Название"
+      body: "Текст"
+      category: "Категория"
+      is_active: "Активный"
+      variables: "Переменные"
+
+    categories:
+      greeting: "Приветствие"
+      follow_up: "Напоминание"
+      booking_confirmation: "Подтверждение бронирования"
+      payment_reminder: "Напоминание об оплате"
+      general: "Общее"
+
+  # Authentication
+  auth:
+    sign_in: "Войти"
+    sign_up: "Зарегистрироваться"
+    sign_out: "Выйти"
+    email: "Email"
+    password: "Пароль"
+    password_confirmation: "Подтверждение пароля"
+    remember_me: "Запомнить меня"
+    forgot_password: "Забыли пароль?"
+    sign_in_with: "Войти с помощью"
+    dont_have_account: "Нет аккаунта?"
+    already_have_account: "Уже есть аккаунт?"
+
+  # Flash messages
+  flash:
+    success: "Операция выполнена успешно"
+    error: "Произошла ошибка"
+    notice: "Внимание"
+    alert: "Предупреждение"
+
+  # Date and time
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d %b"
+      long: "%d %B %Y"
+
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M"
+      short: "%d %b %H:%M"
+      long: "%d %B %Y, %H:%M:%S"
+
+  # ActiveRecord
+  activerecord:
+    models:
+      lead: "Лид"
+      client: "Клиент"
+      booking: "Бронирование"
+      tour: "Тур"
+      tour_departure: "Отправление тура"
+      payment: "Платеж"
+      communication: "Коммуникация"
+      whatsapp_template: "Шаблон WhatsApp"
+      user: "Пользователь"
+
+    attributes:
+      lead:
+        name: "Имя"
+        phone: "Телефон"
+        email: "Email"
+        source: "Источник"
+        status: "Статус"
+        notes: "Заметки"
+
+      client:
+        name: "Имя"
+        phone: "Телефон"
+        email: "Email"
+        preferred_language: "Язык"
+        notes: "Заметки"
+
+      booking:
+        reference_number: "Номер брони"
+        status: "Статус"
+        total_amount: "Сумма"
+
+    errors:
+      messages:
+        blank: "не может быть пустым"
+        taken: "уже занято"
+        invalid: "недействительно"
+        too_short: "слишком короткое"
+        too_long: "слишком длинное"
+        confirmation: "не совпадает"
