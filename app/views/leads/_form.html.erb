@@ -10,7 +10,7 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(lead.errors.count, "error") %> prohibited this lead from being saved:
+            <%= t('leads.form.errors_count', count: lead.errors.count) %>
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc list-inside space-y-1">
@@ -28,8 +28,8 @@
   <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
     <!-- Client Information Section -->
     <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-      <h3 class="text-lg font-medium text-gray-900">Client Information</h3>
-      <p class="mt-1 text-sm text-gray-600">Select an existing client or create a new one</p>
+      <h3 class="text-lg font-medium text-gray-900"><%= t('leads.form.client_information') %></h3>
+      <p class="mt-1 text-sm text-gray-600"><%= t('leads.form.client_info_subtitle') %></p>
     </div>
 
     <div class="px-6 py-6 space-y-6">
@@ -37,22 +37,22 @@
       <div class="flex items-center space-x-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <label class="inline-flex items-center cursor-pointer">
           <input type="radio" name="client_option" value="existing" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" <%= 'checked' if lead.persisted? || params[:client_id].present? %>>
-          <span class="ml-3 text-sm font-medium text-gray-700">Select Existing Client</span>
+          <span class="ml-3 text-sm font-medium text-gray-700"><%= t('leads.form.select_existing_client') %></span>
         </label>
         <label class="inline-flex items-center cursor-pointer">
           <input type="radio" name="client_option" value="new" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" <%= 'checked' unless lead.persisted? || params[:client_id].present? %>>
-          <span class="ml-3 text-sm font-medium text-gray-700">Create New Client</span>
+          <span class="ml-3 text-sm font-medium text-gray-700"><%= t('leads.form.create_new_client') %></span>
         </label>
       </div>
 
       <!-- Existing Client Selection -->
       <div id="existing-client-section" class="<%= 'hidden' unless lead.persisted? || params[:client_id].present? %>">
-        <%= form.label :client_id, "Select Client", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.label :client_id, t('leads.form.select_client'), class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= form.select :client_id,
             options_from_collection_for_select(Client.order(:name), :id, :name, lead.client_id || params[:client_id]),
-            { include_blank: 'Choose a client...' },
+            { include_blank: t('leads.form.choose_client') },
             class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-        <p class="mt-2 text-xs text-gray-500">Select from existing clients</p>
+        <p class="mt-2 text-xs text-gray-500"><%= t('leads.form.select_from_existing') %></p>
       </div>
 
       <!-- New Client Fields -->
@@ -62,24 +62,24 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Name -->
               <div>
-                <%= client_form.label :name, "Client Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.label :name, t('leads.form.client_name'), class: "block text-sm font-medium text-gray-700 mb-2" %>
                 <%= client_form.text_field :name,
                     class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-                    placeholder: "Full name" %>
+                    placeholder: t('leads.form.full_name') %>
               </div>
 
               <!-- Phone -->
               <div>
-                <%= client_form.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.label :phone, t('clients.attributes.phone'), class: "block text-sm font-medium text-gray-700 mb-2" %>
                 <%= client_form.telephone_field :phone,
                     class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
                     placeholder: "+1234567890" %>
-                <p class="mt-1 text-xs text-gray-500">Include country code (e.g., +1, +7, +77)</p>
+                <p class="mt-1 text-xs text-gray-500"><%= t('leads.form.phone_hint') %></p>
               </div>
 
               <!-- Email -->
               <div>
-                <%= client_form.label :email, "Email (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.label :email, t('leads.form.email_optional'), class: "block text-sm font-medium text-gray-700 mb-2" %>
                 <%= client_form.email_field :email,
                     class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
                     placeholder: "email@example.com" %>
@@ -87,12 +87,12 @@
 
               <!-- Preferred Language -->
               <div>
-                <%= client_form.label :preferred_language, "Preferred Language", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= client_form.label :preferred_language, t('clients.attributes.preferred_language'), class: "block text-sm font-medium text-gray-700 mb-2" %>
                 <%= client_form.select :preferred_language,
-                    [['English', 'en'], ['Russian', 'ru']],
-                    { include_blank: 'Select language...' },
+                    [[t('clients.languages.en'), 'en'], [t('clients.languages.ru'), 'ru']],
+                    { include_blank: t('leads.form.select_language') },
                     class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-                <p class="mt-1 text-xs text-gray-500">For communications and templates</p>
+                <p class="mt-1 text-xs text-gray-500"><%= t('leads.form.language_hint') %></p>
               </div>
             </div>
           </div>
@@ -102,48 +102,48 @@
 
     <!-- Lead Details Section -->
     <div class="px-6 py-5 border-t border-b border-gray-200 bg-gray-50">
-      <h3 class="text-base font-medium text-gray-900">Lead Details</h3>
-      <p class="mt-1 text-sm text-gray-600">Status, assignment, and tour interest</p>
+      <h3 class="text-base font-medium text-gray-900"><%= t('leads.form.lead_details') %></h3>
+      <p class="mt-1 text-sm text-gray-600"><%= t('leads.form.lead_details_subtitle') %></p>
     </div>
 
     <div class="px-6 py-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <!-- Status -->
         <div>
-          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :status, t('leads.attributes.status'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :status,
-              Lead.statuses.keys.map { |s| [s.titleize, s] },
+              Lead.statuses.keys.map { |s| [t("leads.statuses.#{s}"), s] },
               {},
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-          <p class="mt-1 text-xs text-gray-500">Current status in the sales pipeline</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('leads.form.status_hint') %></p>
         </div>
 
         <!-- Assigned Agent -->
         <div>
-          <%= form.label :assigned_agent_id, "Assigned Agent", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :assigned_agent_id, t('leads.attributes.assigned_agent'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :assigned_agent_id,
-              [['Unassigned', nil]] + User.agents.order(:name).map { |a| [a.name, a.id] },
+              [[t('leads.form.unassigned'), nil]] + User.agents.order(:name).map { |a| [a.name, a.id] },
               {},
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-          <p class="mt-1 text-xs text-gray-500">Agent responsible for this lead</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('leads.form.agent_hint') %></p>
         </div>
 
         <!-- Tour Interest -->
         <div class="sm:col-span-2">
-          <%= form.label :tour_interest_id, "Tour Interest", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :tour_interest_id, t('leads.attributes.tour_interest'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :tour_interest_id,
-              [['None', nil]] + (@tours || Tour.active.order(:name)).map { |t| [t.name, t.id] },
+              [[t('leads.form.none'), nil]] + (@tours || Tour.active.order(:name)).map { |t| [t.name, t.id] },
               {},
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-          <p class="mt-1 text-xs text-gray-500">Tour the client is interested in (optional)</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('leads.form.tour_interest_hint') %></p>
         </div>
       </div>
     </div>
 
     <!-- Form Actions -->
     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
-      <%= link_to "Cancel", lead.persisted? ? lead_path(lead) : leads_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
-      <%= form.submit (lead.persisted? ? "Update Lead" : "Create Lead"), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
+      <%= link_to t('common.cancel'), lead.persisted? ? lead_path(lead) : leads_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
+      <%= form.submit (lead.persisted? ? t('leads.form.update_lead') : t('leads.form.create_lead')), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
     </div>
   </div>
 <% end %>

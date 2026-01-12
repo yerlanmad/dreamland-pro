@@ -22,7 +22,7 @@
     <%= form_with url: clients_path, method: :get, class: "space-y-4 sm:space-y-0 sm:flex sm:items-end sm:gap-4" do |f| %>
       <!-- Search -->
       <div class="flex-1">
-        <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :search, t('common.search'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_field :search,
           value: params[:search],
           placeholder: "Name, phone, or email...",

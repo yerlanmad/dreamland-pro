@@ -22,7 +22,7 @@
     <%= form_with url: bookings_path, method: :get, class: "space-y-4 sm:space-y-0 sm:flex sm:items-end sm:gap-4" do |f| %>
       <!-- Search -->
       <div class="flex-1">
-        <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :search, t('common.search'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_field :search,
           value: params[:search],
           placeholder: "Client name or booking ID...",
@@ -31,7 +31,7 @@
 
       <!-- Status Filter -->
       <div>
-        <%= f.label :status, "Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :status, t('bookings.attributes.status'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :status,
           options_for_select([
             ['All Statuses', ''],
@@ -46,7 +46,7 @@
 
       <!-- Upcoming Filter -->
       <div>
-        <%= f.label :upcoming, "Date Range", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :upcoming, t('bookings.attributes.date_range'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :upcoming,
           options_for_select([['All Dates', ''], ['Upcoming Only', 'true']], params[:upcoming]),
           {},
@@ -56,7 +56,7 @@
       <!-- Buttons -->
       <div class="flex gap-2">
         <%= f.submit "Filter", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-        <%= link_to "Clear", bookings_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        <%= link_to t('common.cancel'), bookings_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
       </div>
     <% end %>
   </div>

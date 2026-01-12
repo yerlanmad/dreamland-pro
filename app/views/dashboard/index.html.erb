@@ -2,10 +2,10 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+      <h1 class="text-3xl font-bold text-gray-900"><%= t('dashboard.title') %></h1>
       <p class="mt-2 text-sm text-gray-600">
-        Welcome back, <span class="font-medium text-gray-900"><%= current_user.name %></span>!
-        Here's what's happening with your CRM today.
+        <%= t('dashboard.welcome_back') %>, <span class="font-medium text-gray-900"><%= current_user.name %></span>!
+        <%= t('dashboard.whats_happening') %>
       </p>
     </div>
 
@@ -24,7 +24,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">Total Leads</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.total_leads') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-bold text-gray-900"><%= Lead.count %></div>
                 </dd>
@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="mt-4">
-            <%= link_to "View all leads →", leads_path, class: "text-sm font-medium text-blue-600 hover:text-blue-700" %>
+            <%= link_to t('dashboard.view_all_leads'), leads_path, class: "text-sm font-medium text-blue-600 hover:text-blue-700" %>
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">New Leads</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.new_leads') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-bold text-gray-900"><%= Lead.where(status: 'new').count %></div>
                   <% new_percentage = Lead.count > 0 ? ((Lead.where(status: 'new').count.to_f / Lead.count) * 100).round : 0 %>
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="mt-4">
-            <%= link_to "View new leads →", leads_path(status: 'new'), class: "text-sm font-medium text-green-600 hover:text-green-700" %>
+            <%= link_to t('dashboard.view_new_leads'), leads_path(status: 'new'), class: "text-sm font-medium text-green-600 hover:text-green-700" %>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">Unassigned</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.unassigned') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-bold text-gray-900"><%= Lead.where(assigned_agent_id: nil).count %></div>
                 </dd>
@@ -86,7 +86,7 @@
             </div>
           </div>
           <div class="mt-4">
-            <%= link_to "Assign leads →", leads_path(unassigned: 'true'), class: "text-sm font-medium text-yellow-600 hover:text-yellow-700" %>
+            <%= link_to t('dashboard.assign_leads'), leads_path(unassigned: 'true'), class: "text-sm font-medium text-yellow-600 hover:text-yellow-700" %>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">Unread Messages</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.unread_messages') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-bold text-gray-900"><%= Lead.with_unread_messages.count %></div>
                 </dd>
@@ -112,7 +112,7 @@
             </div>
           </div>
           <div class="mt-4">
-            <%= link_to "View messages →", leads_path(unread: 'true'), class: "text-sm font-medium text-red-600 hover:text-red-700" %>
+            <%= link_to t('dashboard.view_messages'), leads_path(unread: 'true'), class: "text-sm font-medium text-red-600 hover:text-red-700" %>
           </div>
         </div>
       </div>
@@ -125,8 +125,8 @@
         <div class="bg-white shadow-sm rounded-lg">
           <div class="px-6 py-5 border-b border-gray-200">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-medium text-gray-900">Recent Leads</h3>
-              <%= link_to "View all", leads_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-700" %>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('dashboard.recent_leads') %></h3>
+              <%= link_to t('dashboard.view_all'), leads_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-700" %>
             </div>
           </div>
           <div class="divide-y divide-gray-200">
@@ -160,10 +160,10 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">No leads yet</h3>
-                <p class="mt-1 text-sm text-gray-500">Get started by creating your first lead.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('dashboard.no_leads_yet') %></h3>
+                <p class="mt-1 text-sm text-gray-500"><%= t('dashboard.get_started') %></p>
                 <div class="mt-6">
-                  <%= link_to "New Lead", new_lead_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+                  <%= link_to t('dashboard.new_lead_button'), new_lead_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
                 </div>
               </div>
             <% end %>
@@ -176,7 +176,7 @@
         <!-- Quick Actions -->
         <div class="bg-white shadow-sm rounded-lg">
           <div class="px-6 py-5 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
+            <h3 class="text-lg font-medium text-gray-900"><%= t('dashboard.quick_actions') %></h3>
           </div>
           <div class="px-6 py-5 space-y-3">
             <%= link_to new_lead_path, class: "flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
@@ -188,8 +188,8 @@
                 </div>
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900">New Lead</p>
-                <p class="text-xs text-gray-500">Add a new lead to CRM</p>
+                <p class="text-sm font-medium text-gray-900"><%= t('dashboard.new_lead_action') %></p>
+                <p class="text-xs text-gray-500"><%= t('dashboard.add_new_lead') %></p>
               </div>
             <% end %>
 
@@ -202,8 +202,8 @@
                 </div>
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900">Manage Tours</p>
-                <p class="text-xs text-gray-500">View and edit tours</p>
+                <p class="text-sm font-medium text-gray-900"><%= t('dashboard.manage_tours') %></p>
+                <p class="text-xs text-gray-500"><%= t('dashboard.view_and_edit_tours') %></p>
               </div>
             <% end %>
 
@@ -216,8 +216,8 @@
                 </div>
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-gray-900">View Bookings</p>
-                <p class="text-xs text-gray-500">Manage all bookings</p>
+                <p class="text-sm font-medium text-gray-900"><%= t('dashboard.view_bookings') %></p>
+                <p class="text-xs text-gray-500"><%= t('dashboard.manage_all_bookings') %></p>
               </div>
             <% end %>
           </div>
@@ -226,7 +226,7 @@
         <!-- Lead Status Breakdown -->
         <div class="bg-white shadow-sm rounded-lg">
           <div class="px-6 py-5 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Lead Status</h3>
+            <h3 class="text-lg font-medium text-gray-900"><%= t('dashboard.lead_status') %></h3>
           </div>
           <div class="px-6 py-5">
             <dl class="space-y-3">

@@ -9,9 +9,9 @@
           </svg>
         <% end %>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Edit Tour</h1>
+          <h1 class="text-3xl font-bold text-gray-900"><%= t('tours.edit') %></h1>
           <p class="mt-1 text-sm text-gray-500">
-            Update <%= @tour.name %>'s information
+            <%= t('tours.edit_description', name: @tour.name) %>
           </p>
         </div>
       </div>

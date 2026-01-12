@@ -28,7 +28,7 @@
     <div class="px-6 py-5 space-y-6">
       <!-- Client Selection -->
       <div>
-        <%= f.label :client_id, "Client", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :client_id, t('bookings.attributes.client'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <% if booking.client.present? && booking.persisted? %>
           <!-- Show readonly client info when editing -->
           <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -71,7 +71,7 @@
 
       <!-- Tour Departure Selection -->
       <div>
-        <%= f.label :tour_departure_id, "Tour Departure", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :tour_departure_id, t('bookings.attributes.tour_departure'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.collection_select :tour_departure_id,
           @available_departures || TourDeparture.upcoming,
           :id,
@@ -101,7 +101,7 @@
       <!-- Total Amount and Currency (in one row) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <%= f.label :total_amount, "Total Amount", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.label :total_amount, t('bookings.attributes.total_amount'), class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= f.number_field :total_amount,
             step: 0.01,
             min: 0,
@@ -113,7 +113,7 @@
         </div>
 
         <div>
-          <%= f.label :currency, "Currency", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.label :currency, t('bookings.attributes.currency'), class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= f.select :currency,
             options_for_select([
               ['US Dollar (USD)', 'USD'],
@@ -128,7 +128,7 @@
 
       <!-- Status -->
       <div>
-        <%= f.label :status, "Booking Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :status, t('bookings.attributes.status'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :status,
           options_for_select([
             ['Confirmed', 'confirmed'],
@@ -163,7 +163,7 @@
 
     <!-- Form Actions -->
     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
-      <%= link_to "Cancel", bookings_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      <%= link_to t('common.cancel'), bookings_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
       <%= f.submit booking.persisted? ? "Update Booking" : "Create Booking",
         class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
     </div>
