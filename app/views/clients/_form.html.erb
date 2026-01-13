@@ -10,7 +10,7 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(client.errors.count, "error") %> prohibited this client from being saved:
+            <%= t('clients.form.errors', count: client.errors.count) %>
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc list-inside space-y-1">
@@ -28,66 +28,66 @@
   <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
     <!-- Contact Information Section -->
     <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-      <h3 class="text-lg font-medium text-gray-900">Contact Information</h3>
-      <p class="mt-1 text-sm text-gray-600">Basic details for client identification</p>
+      <h3 class="text-lg font-medium text-gray-900"><%= t('clients.form.contact_information') %></h3>
+      <p class="mt-1 text-sm text-gray-600"><%= t('clients.form.contact_information_help') %></p>
     </div>
 
     <div class="px-6 py-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <!-- Name -->
         <div>
-          <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :name, t('clients.form.name_label'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.text_field :name,
               required: true,
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "Full name" %>
-          <p class="mt-1 text-xs text-gray-500">Client's full name</p>
+              placeholder: t('clients.form.name_placeholder') %>
+          <p class="mt-1 text-xs text-gray-500"><%= t('clients.form.name_help') %></p>
         </div>
 
         <!-- Phone -->
         <div>
-          <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :phone, t('clients.form.phone_label'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.telephone_field :phone,
               required: true,
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "+1234567890" %>
-          <p class="mt-1 text-xs text-gray-500">Include country code (e.g., +1, +7, +77)</p>
+              placeholder: t('clients.form.phone_placeholder') %>
+          <p class="mt-1 text-xs text-gray-500"><%= t('clients.form.phone_help') %></p>
         </div>
 
         <!-- Email -->
         <div>
-          <%= form.label :email, "Email (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :email, t('clients.form.email_label'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.email_field :email,
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-              placeholder: "email@example.com" %>
-          <p class="mt-1 text-xs text-gray-500">Optional</p>
+              placeholder: t('clients.form.email_placeholder') %>
+          <p class="mt-1 text-xs text-gray-500"><%= t('clients.form.email_help') %></p>
         </div>
 
         <!-- Preferred Language -->
         <div>
-          <%= form.label :preferred_language, "Preferred Language", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= form.label :preferred_language, t('clients.form.preferred_language_label'), class: "block text-sm font-medium text-gray-700 mb-2" %>
           <%= form.select :preferred_language,
-              [['English', 'en'], ['Russian', 'ru']],
-              { include_blank: 'Select language...' },
+              [[t('languages.en'), 'en'], [t('languages.ru'), 'ru']],
+              { include_blank: t('clients.form.select_language_prompt') },
               class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
-          <p class="mt-1 text-xs text-gray-500">For communications and templates</p>
+          <p class="mt-1 text-xs text-gray-500"><%= t('clients.form.preferred_language_help') %></p>
         </div>
       </div>
     </div>
 
     <!-- Notes Section -->
     <div class="px-6 py-5 border-t border-b border-gray-200 bg-gray-50">
-      <h3 class="text-base font-medium text-gray-900">Internal Notes</h3>
-      <p class="mt-1 text-sm text-gray-600">Additional information about this client</p>
+      <h3 class="text-base font-medium text-gray-900"><%= t('clients.form.internal_notes') %></h3>
+      <p class="mt-1 text-sm text-gray-600"><%= t('clients.form.internal_notes_help') %></p>
     </div>
 
     <div class="px-6 py-6">
-      <%= form.label :notes, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= form.label :notes, t('clients.form.notes_label'), class: "block text-sm font-medium text-gray-700 mb-2" %>
       <%= form.text_area :notes,
           rows: 4,
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-          placeholder: "Add any notes about this client..." %>
-      <p class="mt-2 text-xs text-gray-500">Internal notes (not visible to client)</p>
+          placeholder: t('clients.form.notes_placeholder') %>
+      <p class="mt-2 text-xs text-gray-500"><%= t('clients.form.notes_help') %></p>
     </div>
 
     <!-- Form Actions -->

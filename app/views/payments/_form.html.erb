@@ -36,13 +36,13 @@
               </svg>
             </div>
             <div class="ml-3 flex-1">
-              <h3 class="text-sm font-medium text-blue-800">Payment for <%= @booking.reference_number %></h3>
+              <h3 class="text-sm font-medium text-blue-800"><%= t('payments.form.payment_for') %> <%= @booking.reference_number %></h3>
               <div class="mt-2 text-sm text-blue-700">
-                <p><strong>Client:</strong> <%= @booking.client_name %></p>
-                <p><strong>Tour:</strong> <%= @booking.tour_name %></p>
-                <p><strong>Booking Total:</strong> <%= number_to_currency(@booking.total_amount, unit: @booking.currency, precision: 0) %></p>
-                <p><strong>Already Paid:</strong> <%= number_to_currency(@booking.total_paid, unit: @booking.currency, precision: 0) %></p>
-                <p><strong>Outstanding:</strong> <span class="font-semibold"><%= number_to_currency(@booking.outstanding_balance, unit: @booking.currency, precision: 0) %></span></p>
+                <p><strong><%= t('payments.form.client_label') %></strong> <%= @booking.client_name %></p>
+                <p><strong><%= t('payments.form.tour_label') %></strong> <%= @booking.tour_name %></p>
+                <p><strong><%= t('payments.form.booking_total') %></strong> <%= number_to_currency(@booking.total_amount, unit: @booking.currency, precision: 0) %></p>
+                <p><strong><%= t('payments.form.already_paid') %></strong> <%= number_to_currency(@booking.total_paid, unit: @booking.currency, precision: 0) %></p>
+                <p><strong><%= t('payments.form.outstanding') %></strong> <span class="font-semibold"><%= number_to_currency(@booking.outstanding_balance, unit: @booking.currency, precision: 0) %></span></p>
               </div>
             </div>
           </div>
@@ -51,77 +51,77 @@
 
       <!-- Amount -->
       <div>
-        <%= f.label :amount, "Payment Amount", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :amount, t('payments.form.amount_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.number_field :amount,
           step: 0.01,
           min: 0,
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-          placeholder: "0.00" %>
+          placeholder: t('payments.form.amount_placeholder') %>
         <% if defined?(@booking) && @booking.present? && @booking.outstanding_balance > 0 %>
           <p class="mt-1 text-xs text-gray-500">
-            Outstanding balance: <%= number_to_currency(@booking.outstanding_balance, unit: @booking.currency, precision: 0) %>
-            <button type="button" onclick="document.querySelector('input[name=\'payment[amount]\']').value = <%= @booking.outstanding_balance %>" class="ml-2 text-indigo-600 hover:text-indigo-700 font-medium">Apply full balance</button>
+            <%= t('payments.form.outstanding_balance') %>: <%= number_to_currency(@booking.outstanding_balance, unit: @booking.currency, precision: 0) %>
+            <button type="button" onclick="document.querySelector('input[name=\'payment[amount]\']').value = <%= @booking.outstanding_balance %>" class="ml-2 text-indigo-600 hover:text-indigo-700 font-medium"><%= t('payments.form.apply_full_balance') %></button>
           </p>
         <% end %>
       </div>
 
       <!-- Currency -->
       <div>
-        <%= f.label :currency, "Currency", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :currency, t('payments.form.currency_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :currency,
           options_for_select([
-            ['US Dollar (USD)', 'USD'],
-            ['Kazakh Tenge (KZT)', 'KZT'],
-            ['Euro (EUR)', 'EUR'],
-            ['Russian Ruble (RUB)', 'RUB']
+            [t('payments.form.payment_methods.cash'), 'USD'],
+            [t('bookings.form.currencies.kzt'), 'KZT'],
+            [t('bookings.form.currencies.eur'), 'EUR'],
+            [t('bookings.form.currencies.rub'), 'RUB']
           ], payment.currency || (defined?(@booking) ? @booking.currency : 'USD')),
           {},
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         <% if defined?(@booking) && @booking.present? %>
           <p class="mt-1 text-xs text-gray-500">
-            Booking currency: <%= @booking.currency %>
+            <%= t('payments.form.booking_currency') %>: <%= @booking.currency %>
           </p>
         <% end %>
       </div>
 
       <!-- Payment Date -->
       <div>
-        <%= f.label :payment_date, "Payment Date", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :payment_date, t('payments.form.payment_date_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.date_field :payment_date,
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         <p class="mt-1 text-xs text-gray-500">
-          Date when payment was received
+          <%= t('payments.form.payment_date_help') %>
         </p>
       </div>
 
       <!-- Payment Method -->
       <div>
-        <%= f.label :payment_method, "Payment Method", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :payment_method, t('payments.form.payment_method_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :payment_method,
           options_for_select([
-            ['Cash', 'cash'],
-            ['Bank Transfer', 'bank_transfer'],
-            ['Credit Card', 'credit_card'],
-            ['Online Payment', 'online']
+            [t('payments.form.payment_methods.cash'), 'cash'],
+            [t('payments.form.payment_methods.bank_transfer'), 'bank_transfer'],
+            [t('payments.form.payment_methods.credit_card'), 'credit_card'],
+            [t('payments.form.payment_methods.online'), 'online']
           ], payment.payment_method),
-          { prompt: "Select payment method..." },
+          { prompt: t('payments.form.payment_method_prompt') },
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
       </div>
 
       <!-- Payment Status -->
       <div>
-        <%= f.label :status, "Payment Status", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :status, t('payments.form.status_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :status,
           options_for_select([
-            ['Pending', 'pending'],
-            ['Completed', 'completed'],
-            ['Failed', 'failed'],
-            ['Refunded', 'refunded']
+            [t('payments.statuses.pending'), 'pending'],
+            [t('payments.statuses.completed'), 'completed'],
+            [t('payments.statuses.failed'), 'failed'],
+            [t('payments.statuses.refunded'), 'refunded']
           ], payment.status || 'pending'),
           {},
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
         <p class="mt-1 text-xs text-gray-500">
-          Current status of this payment
+          <%= t('payments.form.status_help') %>
         </p>
       </div>
     </div>
@@ -130,7 +130,7 @@
     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end space-x-3">
       <% back_path = defined?(@booking) && @booking.present? ? @booking : payments_path %>
       <%= link_to t('common.cancel'), back_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      <%= f.submit payment.persisted? ? "Update Payment" : "Record Payment",
+      <%= f.submit payment.persisted? ? t('payments.form.update_payment') : t('payments.form.create_payment'),
         class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
     </div>
   </div>

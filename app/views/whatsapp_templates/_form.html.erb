@@ -11,7 +11,7 @@
           </div>
           <div class="ml-3">
             <h3 class="text-sm font-medium text-red-800">
-              <%= pluralize(template.errors.count, "error") %> prohibited this template from being saved:
+              <%= t('whatsapp_templates.form.errors', count: template.errors.count) %>
             </h3>
             <div class="mt-2 text-sm text-red-700">
               <ul class="list-disc pl-5 space-y-1">
@@ -27,30 +27,30 @@
 
     <!-- Basic Information -->
     <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-      <h3 class="text-lg font-medium text-gray-900">Template Information</h3>
-      <p class="mt-1 text-sm text-gray-500">Create reusable message templates with variable substitution</p>
+      <h3 class="text-lg font-medium text-gray-900"><%= t('whatsapp_templates.form.template_information') %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t('whatsapp_templates.form.template_information_help') %></p>
     </div>
 
     <div class="px-6 space-y-4">
       <!-- Name -->
       <div>
-        <%= f.label :name, "Template Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :name, t('whatsapp_templates.form.name_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_field :name,
-          placeholder: "e.g., 'Greeting for new leads'",
+          placeholder: t('whatsapp_templates.form.name_placeholder'),
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
       </div>
 
       <!-- Category -->
       <div>
-        <%= f.label :category, "Category", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :category, t('whatsapp_templates.form.category_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.select :category,
           [
-            ['Greeting', 'greeting'],
-            ['Pricing', 'pricing'],
-            ['Availability', 'availability'],
-            ['Confirmation', 'confirmation'],
-            ['Follow-up', 'follow_up'],
-            ['General', 'general']
+            [t('whatsapp_templates.categories.greeting'), 'greeting'],
+            [t('whatsapp_templates.categories.pricing'), 'pricing'],
+            [t('whatsapp_templates.categories.availability'), 'availability'],
+            [t('whatsapp_templates.categories.confirmation'), 'confirmation'],
+            [t('whatsapp_templates.categories.follow_up'), 'follow_up'],
+            [t('whatsapp_templates.categories.general'), 'general']
           ],
           {},
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
@@ -58,13 +58,13 @@
 
       <!-- Content -->
       <div>
-        <%= f.label :content, "Message Content", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.label :content, t('whatsapp_templates.form.content_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= f.text_area :content,
           rows: 6,
-          placeholder: "Hello {{name}}, thank you for your inquiry about {{tour_name}}...",
+          placeholder: t('whatsapp_templates.form.content_placeholder'),
           class: "block w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono" %>
         <p class="mt-2 text-sm text-gray-500">
-          Use double curly braces for variables: <code class="px-1 py-0.5 bg-gray-100 rounded">{{variable_name}}</code>
+          <%= t('whatsapp_templates.form.content_help') %>
         </p>
       </div>
 
@@ -77,13 +77,13 @@
             </svg>
           </div>
           <div class="ml-3 flex-1">
-            <h3 class="text-sm font-medium text-blue-800">Available Variables</h3>
+            <h3 class="text-sm font-medium text-blue-800"><%= t('whatsapp_templates.form.available_variables') %></h3>
             <div class="mt-2 text-sm text-blue-700">
               <ul class="list-disc pl-5 space-y-1">
-                <li><code>{{name}}</code> - Client name</li>
-                <li><code>{{phone}}</code> - Client phone number</li>
-                <li><code>{{email}}</code> - Client email</li>
-                <li><code>{{tour_name}}</code> - Tour name (if context available)</li>
+                <li><code>{{name}}</code> - <%= t('whatsapp_templates.form.variables.name') %></li>
+                <li><code>{{phone}}</code> - <%= t('whatsapp_templates.form.variables.phone') %></li>
+                <li><code>{{email}}</code> - <%= t('whatsapp_templates.form.variables.email') %></li>
+                <li><code>{{tour_name}}</code> - <%= t('whatsapp_templates.form.variables.tour_name') %></li>
               </ul>
             </div>
           </div>
@@ -93,14 +93,14 @@
       <!-- Active -->
       <div class="flex items-center">
         <%= f.check_box :active, class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" %>
-        <%= f.label :active, "Active (available for use)", class: "ml-2 text-sm text-gray-700" %>
+        <%= f.label :active, t('whatsapp_templates.form.active_label'), class: "ml-2 text-sm text-gray-700" %>
       </div>
     </div>
 
     <!-- Form Actions -->
     <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3">
-      <%= link_to "Cancel", whatsapp_templates_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      <%= f.submit template.new_record? ? "Create Template" : "Update Template",
+      <%= link_to t('common.cancel'), whatsapp_templates_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      <%= f.submit template.new_record? ? t('whatsapp_templates.form.create_template') : t('whatsapp_templates.form.update_template'),
         class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
     </div>
   <% end %>
