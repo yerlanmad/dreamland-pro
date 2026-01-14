@@ -76,7 +76,7 @@ gem "shoulda-matchers", "~> 6.0", groups: [:test]
 gem "kaminari", "~> 1.2"
 
 # Tailwind CSS for Rails
-gem "tailwindcss-rails", "~> 3.0"
+gem "tailwindcss-rails", "~> 4.4"
 
 # HTTP client for wazzup24 API
 gem "httparty", "~> 0.21"
