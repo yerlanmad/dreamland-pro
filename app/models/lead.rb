@@ -4,6 +4,7 @@ class Lead < ApplicationRecord
   belongs_to :assigned_agent, class_name: 'User', foreign_key: 'assigned_agent_id', optional: true
   belongs_to :tour_interest, class_name: 'Tour', foreign_key: 'tour_interest_id', optional: true
   has_one :booking, dependent: :nullify
+  has_many :communications, dependent: :destroy
 
   # Nested attributes
   accepts_nested_attributes_for :client
