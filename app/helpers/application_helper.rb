@@ -3,13 +3,13 @@ module ApplicationHelper
   def flash_class(type)
     case type.to_sym
     when :notice, :success
-      "bg-green-50 text-green-800 border border-green-200"
+      "bg-white text-green-900 border-l-4 border-green-500 shadow-lg ring-1 ring-green-200"
     when :alert, :error
-      "bg-red-50 text-red-800 border border-red-200"
+      "bg-white text-red-900 border-l-4 border-red-500 shadow-lg ring-1 ring-red-200"
     when :warning
-      "bg-yellow-50 text-yellow-800 border border-yellow-200"
+      "bg-white text-yellow-900 border-l-4 border-yellow-500 shadow-lg ring-1 ring-yellow-200"
     else
-      "bg-blue-50 text-blue-800 border border-blue-200"
+      "bg-white text-blue-900 border-l-4 border-blue-500 shadow-lg ring-1 ring-blue-200"
     end
   end
 
