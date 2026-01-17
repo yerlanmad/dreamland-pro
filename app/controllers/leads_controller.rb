@@ -22,6 +22,15 @@ class LeadsController < ApplicationController
     # Filter active leads (not won or lost)
     @leads = @leads.active if params[:active] == 'true'
 
+    # Filter by campaign source
+    if params[:campaign_source].present?
+      if params[:campaign_source] == 'none'
+        @leads = @leads.without_campaign
+      else
+        @leads = @leads.by_campaign_source(params[:campaign_source])
+      end
+    end
+
     # Search by client name, email, or phone
     if params[:search].present?
       search_term = "%#{params[:search]}%"
@@ -150,7 +159,10 @@ class LeadsController < ApplicationController
       :status,
       :source,
       :assigned_agent_id,
-      :tour_interest_id
+      :tour_interest_id,
+      :campaign_source,
+      :campaign_id,
+      :campaign_url
     )
   end
 

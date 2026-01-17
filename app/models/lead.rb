@@ -26,6 +26,13 @@ class Lead < ApplicationRecord
     import: 'import'
   }
 
+  enum :campaign_source, {
+    instagram: 'instagram',
+    facebook: 'facebook',
+    tiktok: 'tiktok',
+    campaign_manual: 'manual'
+  }, prefix: :campaign
+
   # Validations
   validates :client, presence: true
   validates :status, presence: true
@@ -39,6 +46,9 @@ class Lead < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   scope :by_status, ->(status) { where(status: status) }
   scope :active, -> { where.not(status: ['won', 'lost']) }
+  scope :with_campaign, -> { where.not(campaign_source: nil) }
+  scope :without_campaign, -> { where(campaign_source: nil) }
+  scope :by_campaign_source, ->(source) { where(campaign_source: source) }
 
   # Delegations for convenience
   delegate :name, :phone, :email, :preferred_language, to: :client, prefix: true, allow_nil: false
@@ -71,5 +81,14 @@ class Lead < ApplicationRecord
       update!(status: 'won')
       booking
     end
+  end
+
+  def has_campaign?
+    campaign_source.present?
+  end
+
+  def campaign_display_name
+    return nil unless has_campaign?
+    "#{campaign_source.titleize} - #{campaign_id}"
   end
 end

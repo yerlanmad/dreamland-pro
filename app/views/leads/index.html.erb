@@ -44,6 +44,19 @@
                 options_for_select([[t('leads.all_agents'), '']] + @agents.map { |a| [a.name, a.id] }, params[:agent_id]),
                 class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
           </div>
+
+          <!-- Campaign Filter -->
+          <div>
+            <%= label_tag :campaign_source, t('leads.campaign_filter'), class: "block text-sm font-medium text-gray-700" %>
+            <%= select_tag :campaign_source,
+                options_for_select(
+                  [[t('leads.all_campaigns'), '']] +
+                  Lead.campaign_sources.keys.map { |s| [t("leads.campaign_sources.#{s}"), s] } +
+                  [[t('leads.no_campaign'), 'none']],
+                  params[:campaign_source]
+                ),
+                class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+          </div>
         </div>
 
         <div class="flex items-center space-x-4">
@@ -152,6 +165,9 @@
               <%= t('leads.attributes.source') %>
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <%= t('leads.attributes.campaign') %>
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               <%= t('leads.agent') %>
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -182,6 +198,18 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <%= t("leads.sources.#{lead.source}") %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <% if lead.has_campaign? %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= campaign_badge_class(lead.campaign_source) %>">
+                    <%= t("leads.campaign_sources.#{lead.campaign_source}") %>
+                  </span>
+                  <% if lead.campaign_id.present? %>
+                    <span class="text-gray-400 ml-1 text-xs"><%= truncate(lead.campaign_id, length: 12) %></span>
+                  <% end %>
+                <% else %>
+                  <span class="text-gray-400">-</span>
+                <% end %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <%= lead.assigned_agent&.name || '-' %>

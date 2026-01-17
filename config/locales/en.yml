@@ -71,7 +71,7 @@ en:
   settings:
     title: "Settings"
     subtitle: "Manage your CRM settings, integrations, and preferences"
-    back_to_dashboard: "← Back to Dashboard"
+    back_to_dashboard: "Back to Dashboard"
 
     whatsapp:
       title: "WhatsApp Channels"
@@ -136,6 +136,9 @@ en:
     all_sources: "All Sources"
     agent_filter: "Agent"
     all_agents: "All Agents"
+    campaign_filter: "Campaign"
+    all_campaigns: "All Campaigns"
+    no_campaign: "No Campaign"
     unassigned_only: "Unassigned only"
     unread_messages_only: "Unread messages"
     apply_filters: "Apply Filters"
@@ -161,6 +164,16 @@ en:
       notes: "Notes"
       unread_messages: "Unread Messages"
       last_message_at: "Last Message"
+      campaign: "Campaign"
+      campaign_source: "Campaign Source"
+      campaign_id: "Campaign ID"
+      campaign_url: "Campaign URL"
+
+    campaign_sources:
+      instagram: "Instagram"
+      facebook: "Facebook"
+      tiktok: "TikTok"
+      campaign_manual: "Manual"
 
     sources:
       whatsapp: "WhatsApp"
@@ -204,6 +217,7 @@ en:
       send_message_button: "Send Message"
       back_to_leads: "Back to Leads"
       agent: "Agent"
+      campaign_info: "Campaign Attribution"
 
     form:
       errors_count:
@@ -231,6 +245,8 @@ en:
       none: "None"
       update_lead: "Update Lead"
       create_lead: "Create Lead"
+      campaign_tracking: "Campaign Tracking"
+      optional: "(optional)"
 
   # Clients
   clients:

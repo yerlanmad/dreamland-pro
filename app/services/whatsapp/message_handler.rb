@@ -20,8 +20,8 @@ module Whatsapp
         # Find or create client first (clients have phone numbers)
         client = find_or_create_client(phone, sender_name)
 
-        # Find or create lead for this client
-        lead = find_or_create_lead(client)
+        # Find or create lead for this client (pass message_body for campaign detection)
+        lead = find_or_create_lead(client, message_body)
 
         # Create communication linked to both client and lead
         communication = create_communication(client, lead, message_body, media_url, media_type, payload['messageId'])
@@ -77,16 +77,22 @@ module Whatsapp
       Client.find_by!(phone: phone)
     end
 
-    def find_or_create_lead(client)
+    def find_or_create_lead(client, message_body = nil)
       # Find most recent active lead
       lead = client.leads.active.order(updated_at: :desc).first
 
       return lead if lead
 
+      # Parse campaign info from the first message
+      campaign_data = Campaign::UrlParserService.new(message_body).call
+
       # Create new lead if no active lead exists
       client.leads.create!(
         source: :whatsapp,
-        status: :new
+        status: :new,
+        campaign_source: campaign_data[:campaign_source],
+        campaign_id: campaign_data[:campaign_id],
+        campaign_url: campaign_data[:campaign_url]
       )
     end
 

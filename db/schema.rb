@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_11_122741) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_17_132855) do
   create_table "bookings", force: :cascade do |t|
     t.integer "client_id", null: false
     t.datetime "created_at", null: false
@@ -67,6 +67,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_11_122741) do
 
   create_table "leads", force: :cascade do |t|
     t.integer "assigned_agent_id"
+    t.string "campaign_id"
+    t.string "campaign_source"
+    t.string "campaign_url"
     t.integer "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "last_message_at"
@@ -76,6 +79,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_11_122741) do
     t.integer "unread_messages_count", default: 0
     t.datetime "updated_at", null: false
     t.index ["assigned_agent_id"], name: "index_leads_on_assigned_agent_id"
+    t.index ["campaign_source", "campaign_id"], name: "index_leads_on_campaign_source_and_campaign_id"
+    t.index ["campaign_source"], name: "index_leads_on_campaign_source"
     t.index ["client_id"], name: "index_leads_on_client_id"
     t.index ["source"], name: "index_leads_on_source"
     t.index ["status"], name: "index_leads_on_status"

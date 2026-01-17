@@ -78,6 +78,36 @@
                 </dd>
               </div>
             </dl>
+
+            <% if @lead.has_campaign? %>
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <h4 class="text-sm font-medium text-gray-500 mb-2"><%= t('leads.show.campaign_info') %></h4>
+                <dl class="space-y-2">
+                  <div>
+                    <dt class="text-xs text-gray-400"><%= t('leads.attributes.campaign_source') %></dt>
+                    <dd class="text-sm text-gray-900">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= campaign_badge_class(@lead.campaign_source) %>">
+                        <%= t("leads.campaign_sources.#{@lead.campaign_source}") %>
+                      </span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-gray-400"><%= t('leads.attributes.campaign_id') %></dt>
+                    <dd class="text-sm text-gray-900 font-mono"><%= @lead.campaign_id %></dd>
+                  </div>
+                  <% if @lead.campaign_url.present? %>
+                    <div>
+                      <dt class="text-xs text-gray-400"><%= t('leads.attributes.campaign_url') %></dt>
+                      <dd class="text-sm">
+                        <%= link_to truncate(@lead.campaign_url, length: 40), @lead.campaign_url,
+                            target: '_blank', rel: 'noopener',
+                            class: 'text-indigo-600 hover:text-indigo-500' %>
+                      </dd>
+                    </div>
+                  <% end %>
+                </dl>
+              </div>
+            <% end %>
           </div>
         </div>
 

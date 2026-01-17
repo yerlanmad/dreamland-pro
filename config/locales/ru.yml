@@ -71,7 +71,7 @@ ru:
   settings:
     title: "Настройки"
     subtitle: "Управляйте настройками CRM, интеграциями и предпочтениями"
-    back_to_dashboard: "← Назад к панели управления"
+    back_to_dashboard: "Назад к панели управления"
 
     whatsapp:
       title: "WhatsApp каналы"
@@ -136,6 +136,9 @@ ru:
     all_sources: "Все источники"
     agent_filter: "Агент"
     all_agents: "Все агенты"
+    campaign_filter: "Кампания"
+    all_campaigns: "Все кампании"
+    no_campaign: "Без кампании"
     unassigned_only: "Только неназначенные"
     unread_messages_only: "Непрочитанные сообщения"
     apply_filters: "Применить фильтры"
@@ -161,6 +164,16 @@ ru:
       notes: "Заметки"
       unread_messages: "Непрочитанные сообщения"
       last_message_at: "Последнее сообщение"
+      campaign: "Кампания"
+      campaign_source: "Источник кампании"
+      campaign_id: "ID кампании"
+      campaign_url: "URL кампании"
+
+    campaign_sources:
+      instagram: "Instagram"
+      facebook: "Facebook"
+      tiktok: "TikTok"
+      campaign_manual: "Вручную"
 
     sources:
       whatsapp: "WhatsApp"
@@ -204,6 +217,7 @@ ru:
       send_message_button: "Отправить сообщение"
       back_to_leads: "Назад к лидам"
       agent: "Агент"
+      campaign_info: "Атрибуция кампании"
 
     form:
       errors_count:
@@ -233,6 +247,8 @@ ru:
       none: "Нет"
       update_lead: "Обновить лид"
       create_lead: "Создать лид"
+      campaign_tracking: "Отслеживание кампании"
+      optional: "(опционально)"
 
   # Clients
   clients:
