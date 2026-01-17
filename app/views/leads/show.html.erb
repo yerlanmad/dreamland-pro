@@ -137,7 +137,7 @@
 
               <!-- Mark Messages as Read -->
               <% if @lead.unread_messages_count > 0 %>
-                <%= button_to "#{t('leads.show.mark_messages_read')} (#{@lead.unread_messages_count})", "#", method: :patch, class: "w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                <%= button_to "#{t('leads.show.mark_messages_read')} (#{@lead.unread_messages_count})", mark_messages_read_lead_path(@lead), method: :patch, class: "w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
               <% end %>
 
               <!-- Convert to Booking -->

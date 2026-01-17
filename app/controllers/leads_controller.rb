@@ -1,5 +1,5 @@
 class LeadsController < ApplicationController
-  before_action :set_lead, only: [:show, :edit, :update, :destroy, :assign, :mark_contacted, :convert_to_booking]
+  before_action :set_lead, only: [:show, :edit, :update, :destroy, :assign, :mark_contacted, :mark_messages_read, :convert_to_booking]
 
   def index
     @leads = Lead.includes(:client, :assigned_agent, :tour_interest)
@@ -99,6 +99,9 @@ class LeadsController < ApplicationController
   end
 
   def update
+    # Guard clause: ensure lead params are present
+    return redirect_to @lead, alert: "Invalid request." unless params[:lead]
+
     # Check if we're switching to an existing client or creating a new one
     if params[:lead][:client_id].present?
       # Switching to an existing client
@@ -145,6 +148,12 @@ class LeadsController < ApplicationController
   def mark_contacted
     @lead.mark_as_contacted!
     redirect_to @lead, notice: "Lead marked as contacted."
+  end
+
+  # Custom action: Mark all messages as read
+  def mark_messages_read
+    @lead.mark_all_messages_read!
+    redirect_to @lead, notice: "All messages marked as read."
   end
 
   # Custom action: Convert lead to booking

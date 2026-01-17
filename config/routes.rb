@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     member do
       post :assign
       patch :mark_contacted
+      patch :mark_messages_read
       post :convert_to_booking
     end
     resources :communications, only: [:create]
