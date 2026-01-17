@@ -4,8 +4,8 @@ set -e
 echo "🚀 Manual Deployment Script for Dreamland PRO"
 echo "=============================================="
 
-# Get RAILS_MASTER_KEY from local file
-RAILS_MASTER_KEY=$(cat config/master.key)
+# Get RAILS_MASTER_KEY from production credentials key
+RAILS_MASTER_KEY=$(cat config/credentials/production.key)
 
 # Build and push image
 echo "📦 Building and pushing Docker image..."
