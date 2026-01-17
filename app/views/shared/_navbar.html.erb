@@ -25,6 +25,20 @@
 
         <!-- Right side: User menu and actions -->
         <div class="flex items-center space-x-4">
+          <!-- Language Switcher -->
+          <div class="hidden sm:block">
+            <%= render 'shared/language_switcher' %>
+          </div>
+
+          <!-- Settings Link -->
+          <%= link_to settings_path, class: "hidden sm:block relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md transition-colors duration-200", title: t('navigation.settings') do %>
+            <span class="sr-only"><%= t('navigation.settings') %></span>
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          <% end %>
+
           <!-- Notifications (placeholder for future) -->
           <button type="button" class="hidden sm:block relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md transition-colors duration-200">
             <span class="sr-only">View notifications</span>
@@ -73,9 +87,10 @@
         <%= link_to t('navigation.leads'), leads_path, class: "block px-4 py-2 text-base font-medium #{current_page?(leads_path) ? 'text-indigo-600 bg-indigo-50 border-l-4 border-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" %>
         <%= link_to t('navigation.tours'), tours_path, class: "block px-4 py-2 text-base font-medium #{current_page?(tours_path) ? 'text-indigo-600 bg-indigo-50 border-l-4 border-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" %>
         <%= link_to t('navigation.bookings'), bookings_path, class: "block px-4 py-2 text-base font-medium #{current_page?(bookings_path) ? 'text-indigo-600 bg-indigo-50 border-l-4 border-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" %>
+        <%= link_to t('navigation.settings'), settings_path, class: "block px-4 py-2 text-base font-medium #{current_page?(settings_path) ? 'text-indigo-600 bg-indigo-50 border-l-4 border-indigo-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" %>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-200">
-        <div class="flex items-center px-4">
+        <div class="flex items-center px-4 mb-3">
           <div class="h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
             <span class="text-indigo-600 font-medium"><%= current_user.name.first.upcase %></span>
           </div>
@@ -83,6 +98,10 @@
             <div class="text-base font-medium text-gray-900"><%= current_user.name %></div>
             <div class="text-sm font-medium text-gray-500"><%= current_user.role.titleize %></div>
           </div>
+        </div>
+        <!-- Language Switcher for Mobile -->
+        <div class="px-4 mb-3">
+          <%= render 'shared/language_switcher' %>
         </div>
       </div>
     </div>

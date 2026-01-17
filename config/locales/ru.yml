@@ -806,6 +806,7 @@ ru:
       default: "%d.%m.%Y %H:%M"
       short: "%d %b %H:%M"
       long: "%d %B %Y, %H:%M:%S"
+    ago: "%{time} назад"
 
   # DateTime distance in words (for time_ago_in_words helper)
   datetime:

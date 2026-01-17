@@ -99,12 +99,24 @@ class LeadsController < ApplicationController
   end
 
   def update
-    if @lead.update(lead_params_without_client)
-      # Also update client info if provided
-      if params[:lead][:client_attributes].present?
-        @lead.client.update(client_params)
+    # Check if we're switching to an existing client or creating a new one
+    if params[:lead][:client_id].present?
+      # Switching to an existing client
+      @lead.update(lead_params_without_client)
+    elsif params[:lead][:client_attributes].present?
+      # Creating a new client - don't modify the existing client
+      new_client = Client.new(client_params)
+      if new_client.save
+        @lead.update(lead_params_without_client.merge(client_id: new_client.id))
+      else
+        @lead.errors.merge!(new_client.errors)
       end
+    else
+      # Just updating lead attributes without changing client
+      @lead.update(lead_params_without_client)
+    end
 
+    if @lead.errors.empty?
       redirect_to @lead, notice: "Lead was successfully updated."
     else
       @tours = Tour.active.order(:name)
@@ -156,6 +168,7 @@ class LeadsController < ApplicationController
 
   def lead_params_without_client
     params.require(:lead).permit(
+      :client_id,
       :status,
       :source,
       :assigned_agent_id,

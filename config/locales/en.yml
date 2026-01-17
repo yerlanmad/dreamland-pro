@@ -746,6 +746,7 @@ en:
       default: "%m/%d/%Y %I:%M %p"
       short: "%b %d %I:%M %p"
       long: "%B %d, %Y at %I:%M:%S %p"
+    ago: "%{time} ago"
 
   # DateTime distance in words (for time_ago_in_words helper)
   datetime:

@@ -67,7 +67,7 @@
               <div>
                 <dt class="text-sm font-medium text-gray-500"><%= t('leads.attributes.last_message_at') %></dt>
                 <dd class="mt-1 text-sm text-gray-900">
-                  <%= @lead.last_message_at ? time_ago_in_words(@lead.last_message_at) + ' ' + t('leads.show.ago') : t('leads.show.never') %>
+                  <%= @lead.last_message_at ? t('time.ago', time: time_ago_in_words(@lead.last_message_at)) : t('leads.show.never') %>
                 </dd>
               </div>
 
@@ -199,7 +199,7 @@
                                 </span>
                               </div>
                               <p class="mt-0.5 text-sm text-gray-500">
-                                <%= time_ago_in_words(comm.created_at) %> ago
+                                <%= t('time.ago', time: time_ago_in_words(comm.created_at)) %>
                               </p>
                             </div>
                             <div class="mt-2 text-sm text-gray-700">

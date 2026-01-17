@@ -57,7 +57,7 @@
 
       <!-- New Client Fields -->
       <div id="new-client-section" class="<%= 'hidden' if lead.persisted? || params[:client_id].present? %>">
-        <%= form.fields_for :client, lead.client || Client.new do |client_form| %>
+        <%= form.fields_for :client, (lead.persisted? ? Client.new : (lead.client || Client.new)) do |client_form| %>
           <div class="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Name -->
@@ -184,30 +184,101 @@
 
 <!-- Client Selection Toggle Script -->
 <script>
+  // Use turbo:load for Rails with Hotwire Turbo
+  document.addEventListener('turbo:load', function() {
+    const existingRadio = document.querySelector('input[name="client_option"][value="existing"]');
+    const newRadio = document.querySelector('input[name="client_option"][value="new"]');
+    const existingSection = document.getElementById('existing-client-section');
+    const newSection = document.getElementById('new-client-section');
+
+    // Guard clause: ensure elements exist
+    if (!existingRadio || !newRadio || !existingSection || !newSection) return;
+
+    function toggleSections() {
+      if (existingRadio.checked) {
+        existingSection.classList.remove('hidden');
+        newSection.classList.add('hidden');
+        // Disable new client fields so they won't be submitted
+        newSection.querySelectorAll('input, select').forEach(field => {
+          if (field.type !== 'hidden') {
+            field.disabled = true;
+            field.value = '';
+          }
+        });
+        // Enable client selection
+        const clientSelect = existingSection.querySelector('select');
+        if (clientSelect) clientSelect.disabled = false;
+      } else {
+        existingSection.classList.add('hidden');
+        newSection.classList.remove('hidden');
+        // Enable new client fields
+        newSection.querySelectorAll('input, select').forEach(field => {
+          if (field.type !== 'hidden') {
+            field.disabled = false;
+          }
+        });
+        // Disable and clear client selection
+        const clientSelect = existingSection.querySelector('select');
+        if (clientSelect) {
+          clientSelect.disabled = true;
+          clientSelect.value = '';
+        }
+      }
+    }
+
+    existingRadio.addEventListener('change', toggleSections);
+    newRadio.addEventListener('change', toggleSections);
+
+    // Initialize on page load
+    toggleSections();
+  });
+
+  // Also support standard DOMContentLoaded for non-Turbo navigation
   document.addEventListener('DOMContentLoaded', function() {
     const existingRadio = document.querySelector('input[name="client_option"][value="existing"]');
     const newRadio = document.querySelector('input[name="client_option"][value="new"]');
     const existingSection = document.getElementById('existing-client-section');
     const newSection = document.getElementById('new-client-section');
 
+    // Guard clause: ensure elements exist
+    if (!existingRadio || !newRadio || !existingSection || !newSection) return;
+
     function toggleSections() {
       if (existingRadio.checked) {
         existingSection.classList.remove('hidden');
         newSection.classList.add('hidden');
-        // Clear new client fields
+        // Disable new client fields so they won't be submitted
         newSection.querySelectorAll('input, select').forEach(field => {
-          if (field.type !== 'hidden') field.value = '';
+          if (field.type !== 'hidden') {
+            field.disabled = true;
+            field.value = '';
+          }
         });
+        // Enable client selection
+        const clientSelect = existingSection.querySelector('select');
+        if (clientSelect) clientSelect.disabled = false;
       } else {
         existingSection.classList.add('hidden');
         newSection.classList.remove('hidden');
-        // Clear client selection
+        // Enable new client fields
+        newSection.querySelectorAll('input, select').forEach(field => {
+          if (field.type !== 'hidden') {
+            field.disabled = false;
+          }
+        });
+        // Disable and clear client selection
         const clientSelect = existingSection.querySelector('select');
-        if (clientSelect) clientSelect.value = '';
+        if (clientSelect) {
+          clientSelect.disabled = true;
+          clientSelect.value = '';
+        }
       }
     }
 
     existingRadio.addEventListener('change', toggleSections);
     newRadio.addEventListener('change', toggleSections);
+
+    // Initialize on page load
+    toggleSections();
   });
 </script>
